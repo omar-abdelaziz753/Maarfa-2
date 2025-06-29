@@ -13,8 +13,9 @@ class EducationalStagesLoadingState extends EducationalStagesState {}
 
 class EducationalStagesLoadedState extends EducationalStagesState {
   List<EducationalStageModel> data;
+  List<LessonData> lessonData;
 
-  EducationalStagesLoadedState({required this.data});
+  EducationalStagesLoadedState({required this.data, required this.lessonData});
 }
 
 class EducationalStagesErrorState extends EducationalStagesState {}

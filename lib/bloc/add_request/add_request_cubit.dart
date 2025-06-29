@@ -96,6 +96,8 @@ class AddRequestCubit extends Cubit<AddRequestState> {
     required int lessonId,
     required String type,
     required dynamic lessonDetails,
+    required BuildContext context,
+    bool? isHome = false
   }) async {
     if (times.isEmpty) {
       //Todo: add to lang files
@@ -109,6 +111,7 @@ class AddRequestCubit extends Cubit<AddRequestState> {
             type: type,
             times: times,
             lessonDetails: lessonDetails,
+        isHome: isHome, context: context,
           )
           .whenComplete(() => authController.reset());
     }

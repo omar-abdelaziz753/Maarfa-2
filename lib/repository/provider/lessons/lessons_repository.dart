@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:my_academy/model/common/specializations/lessions_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../bloc/content/content_cubit.dart';
@@ -120,6 +121,19 @@ class ProviderLessonsRepository {
       debugPrint(e.toString());
 
       throw Exception();
+    }
+  }
+
+  getLessonsPrices() async {
+    try {
+      return await DioService()
+          .get('/lesson')
+          .then((value) => value.fold((l) => showToast(l), (r) {
+                LessonModelPrice specializations = LessonModelPrice.fromJson(r);
+                return specializations;
+              }));
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

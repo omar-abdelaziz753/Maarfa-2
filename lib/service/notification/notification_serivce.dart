@@ -149,7 +149,7 @@ class NotificationService {
         // }
         // }
         // Parse the message received
-                log('notifiationonMessagep');
+        log('notifiationonMessagep');
 
         PushNotification notification = PushNotification(
           title: message.notification!.title,

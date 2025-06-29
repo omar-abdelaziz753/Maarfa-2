@@ -60,7 +60,7 @@ class SpecializationsRepository {
       return await DioService()
           .get('/lesson')
           .then((value) => value.fold((l) => showToast(l), (r) {
-                LessonModel specializations = LessonModel.fromJson(r);
+                LessonModelPrice specializations = LessonModelPrice.fromJson(r);
                 return specializations;
               }));
     } catch (e) {

@@ -45,6 +45,8 @@ class AddRequestsRepository {
     required String type,
     required List<int> times,
     required dynamic lessonDetails,
+    required BuildContext context,
+    bool? isHome = false
   }) async {
     try {
       return await DioService().post('/clients/requests/validate', body: {
@@ -55,8 +57,24 @@ class AddRequestsRepository {
         return value.fold((l) => showToast(l), (r) {
           // ValidateRequestModel validateRequest =
           //     ValidateRequestModel.fromJson(r);
-          Get.to(() =>
-              RequestLessonScreen(lessonDetails: lessonDetails, times: times));
+          if(isHome == true){
+            Get.to(() =>
+                RequestLessonScreen(lessonDetails: lessonDetails, times: times));
+          } else {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MainScreen(),
+                ),
+                    (route) => false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Booking confirmed successfully!'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
 
           // return validateRequest;
         });

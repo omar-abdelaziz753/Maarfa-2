@@ -1,4 +1,4 @@
-class LessonModel {
+class LessonModelPrice {
   bool? success;
   int? errorCode;
   int? status;
@@ -6,7 +6,7 @@ class LessonModel {
   String? messages;
   List<LessonData>? data;
 
-  LessonModel(
+  LessonModelPrice(
       {this.success,
       this.errorCode,
       this.status,
@@ -14,7 +14,7 @@ class LessonModel {
       this.messages,
       this.data});
 
-  LessonModel.fromJson(Map<String, dynamic> json) {
+  LessonModelPrice.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     errorCode = json['errorCode'];
     status = json['status'];

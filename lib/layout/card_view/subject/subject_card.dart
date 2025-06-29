@@ -163,7 +163,7 @@ class SubjectCard extends StatelessWidget {
                                   onPressed: onTap
                                   // context.read<LessonsCubit>().getLessons(
                                   //     yearId: yearId, stageId: stageId);
-                                  ,
+                          ,
                                   icon: Image.asset(
                                       isBlue ? blueBookmarkIcon : bookmarkIcon,
                                       height: 35,

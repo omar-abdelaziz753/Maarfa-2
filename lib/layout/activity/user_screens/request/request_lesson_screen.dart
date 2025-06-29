@@ -27,7 +27,7 @@ class RequestLessonScreen extends StatelessWidget {
         sidePadding: 30,
         child: ListView(
           children: [
-            RequestLessonDetailsCard(lessonDetails: lessonDetails!),
+            // RequestLessonDetailsCard(lessonDetails: lessonDetails!),
             const Space(
               boxHeight: 30,
             ),

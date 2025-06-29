@@ -15,7 +15,7 @@ class InitSpecializationState extends FilterState {}
 class SpecializationLoadingState extends FilterState {}
 
 class SpecializationLoadedState extends FilterState {
-  List<SpecializationsModel> data;
+  List<Specialization> data;
 
   SpecializationLoadedState({required this.data});
 }

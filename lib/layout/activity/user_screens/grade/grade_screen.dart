@@ -7,7 +7,6 @@ import 'package:my_academy/repository/common/educational_stages/educational_stag
 import 'package:my_academy/widget/app_bar/default_app_bar/default_app_bar.dart';
 import 'package:my_academy/widget/error/page/error_page.dart';
 import 'package:my_academy/widget/loader/loader.dart';
-
 import '../../../../bloc/educational_stages_years/educational_stages_cubit.dart';
 import '../../../view/connectivity/connectivity_view.dart';
 import '../../../view/years/years/years_view.dart';

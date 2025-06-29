@@ -1,79 +1,26 @@
 {
   "project_info": {
-    "project_number": "771933054342",
-    "project_id": "ma3rafa-13104",
-    "storage_bucket": "ma3rafa-13104.appspot.com"
+    "project_number": "271257644207",
+    "project_id": "ma3rfa-a324f",
+    "storage_bucket": "ma3rfa-a324f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:771933054342:android:506178b36bb0a18ec03807",
+        "mobilesdk_app_id": "1:271257644207:android:5b40c78bc93ec12c7f385a",
         "android_client_info": {
           "package_name": "com.maarefa.moltaqa"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "771933054342-q2fse8ak66lk35j03cmj8sd1rpg0foj6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBPdQOAKqVQ07-9ret8--xFSKs8ymFbz64"
+          "current_key": "AIzaSyCUdZP2v-0BbdPGajXWFn6gv45bfufq7jw"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "771933054342-o6h6ksfei6jes4qi94v0j9do3e6fcrp1.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "771933054342-bck51f6voc39o6ujp0cfqemc1frcgt1n.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.moltaqa.ma3rafa"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:771933054342:android:4708ec7eacdb3d8bc03807",
-        "android_client_info": {
-          "package_name": "com.moltaqa.ma3rafa"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "771933054342-q2fse8ak66lk35j03cmj8sd1rpg0foj6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBPdQOAKqVQ07-9ret8--xFSKs8ymFbz64"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "771933054342-o6h6ksfei6jes4qi94v0j9do3e6fcrp1.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "771933054342-bck51f6voc39o6ujp0cfqemc1frcgt1n.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.moltaqa.ma3rafa"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

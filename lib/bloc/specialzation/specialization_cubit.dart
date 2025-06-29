@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:my_academy/bloc/specialzation/specialization_state.dart';
+import 'package:my_academy/model/common/specializations/lessions_model.dart';
+import 'package:my_academy/service/local/share_prefs_service.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
 import '../../layout/activity/auth/register/provider/grades_register_screen.dart';
@@ -91,11 +93,20 @@ class SpecializationCubit extends Cubit<SpecializationState> {
   }
 
   getSpecializations() {
+    SharedPrefService prefService = SharedPrefService();
+
     specializationsRepository.getSpecializations().then((value) async {
-      await specializationsRepository.getLessonsPrices().then((value2) {
+      String? token = await prefService.getValue("token");
+      print("token $token");
+      if (token != "0") {
+        await specializationsRepository.getLessonsPrices().then((value2) {
+          emit(SpecializationLoadedState(
+              data: value.specialization, lessonData: value2.data));
+        });
+      } else {
         emit(SpecializationLoadedState(
-            data: value.specialization, lessonData: value2.data));
-      });
+            data: value.specialization, lessonData: List<LessonData>.empty()));
+      }
     });
   }
 

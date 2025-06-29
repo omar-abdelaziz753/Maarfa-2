@@ -1,9 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_academy/model/common/specializations/lessions_model.dart';
 
 import '../../../../bloc/content/content_cubit.dart';
 import '../../../../bloc/educational_stages_years/educational_stages_cubit.dart';
@@ -46,6 +47,7 @@ class GradesLessonView extends StatelessWidget {
                     child: GradView(
                       data: data,
                       lesson: lesson,
+                      lessonData: (state).lessonData,
                     ));
               } else if (state is EducationalStagesErrorState) {
                 return const ErrorPage();
@@ -61,9 +63,12 @@ class GradView extends StatefulWidget {
     super.key,
     this.lesson,
     required this.data,
+    required this.lessonData,
   });
   final List<EducationalStageModel> data;
   final LessonDetails? lesson;
+  final List<LessonData> lessonData;
+
   @override
   State<GradView> createState() => _GradViewState();
 }
@@ -87,7 +92,6 @@ class _GradViewState extends State<GradView> {
     });
   }
 
-  // DateTime _selectedDateTime = DateTime.now();
   DateTime _initialDateTime = DateTime(
     DateTime.now().year,
     DateTime.now().month,
@@ -106,6 +110,17 @@ class _GradViewState extends State<GradView> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.lessonData);
+    final minPrice = int.tryParse(widget.lessonData
+                .firstWhere((e) => e.key == "individual_price_min")
+                .value ??
+            "0") ??
+        0;
+    final maxPrice = int.tryParse(widget.lessonData
+                .firstWhere((e) => e.key == "individual_price_max")
+                .value ??
+            "0") ??
+        0;
     return BlocConsumer<ContentCubit, ContentState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -159,23 +174,6 @@ class _GradViewState extends State<GradView> {
                     }).toList(),
                   ),
                 ),
-                // ContentDropDown(
-                //   isExpanded: true,
-                //   value: bloc.grade,
-                //   onChange: (val) => bloc.chooseGrade(val),
-                //   items: widget.data
-                //       .map<DropdownMenuItem<EducationalStageModel>>(
-                //           (EducationalStageModel value) {
-                //     return DropdownMenuItem<EducationalStageModel>(
-                //         value: value,
-                //         child: Center(
-                //             child: Text("${value.name}",
-                //                 style: TextStyles.appBarStyle
-                //                     .copyWith(color: mainColor))));
-                //   }).toList(),
-                //   hint: tr("grades"),
-                //   image: "",
-                // ),
                 const Space(
                   boxHeight: 15,
                 ),
@@ -208,8 +206,25 @@ class _GradViewState extends State<GradView> {
                   controller: bloc.price,
                   hintText: tr("hourly_price"),
                   keyboardType: TextInputType.number,
-                  errorText: bloc.validators[1],
-                  onChanged: (val) => bloc.validate(val, 1),
+                  errorText: bloc.validators[3],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(
+                        maxPrice.toString().length),
+                  ],
+                  onChanged: (val) {
+                    final inputVal = int.tryParse(val) ?? 0;
+                    if (val.isEmpty) {
+                      bloc.validators[3] = null;
+                    } else if (inputVal < minPrice || inputVal > maxPrice) {
+                      bloc.validators[3] =
+                          "${tr("hourly_price_between")} $minPrice - $maxPrice ${tr("sar")}";
+                    } else {
+                      bloc.validators[3] = null;
+                    }
+                    setState(() {});
+                  },
+                  suffixIcon: "sar",
                 ),
                 const Space(
                   boxHeight: 15,
@@ -219,21 +234,18 @@ class _GradViewState extends State<GradView> {
                   hintText: tr("lesson_time_date"),
                   keyboardType: TextInputType.number,
                   readOnly: true,
-                  // errorText: bloc.validators[1],
                   onTap: () {
                     _updateDateTime();
                     _showDialog(
                         CupertinoDatePicker(
-                          key: ValueKey(
-                              _initialDateTime), // Unique key for each update
+                          key: ValueKey(_initialDateTime),
                           initialDateTime: _initialDateTime,
                           use24hFormat: true,
-
                           mode: CupertinoDatePickerMode.dateAndTime,
                           onDateTimeChanged: (DateTime newDateTime) {
                             setState(() {
                               _initialDateTime = newDateTime;
-                              // receiptDateTime = _initialDateTime;
+
                               String formattedHour = DateFormat('HH', 'en')
                                   .format(_initialDateTime);
                               String formattedMinute = DateFormat('mm', 'en')
@@ -246,72 +258,23 @@ class _GradViewState extends State<GradView> {
                               context.read<ContentCubit>().setDate(
                                   formattedDate,
                                   '$formattedHour:$formattedMinute');
-                              // log(' reserveVehicle.receiptDateAndTime.text 0 ${reserveVehicle.receiptDateAndTime.text.split(' ')[0]}');
-                              // log(' reserveVehicle.receiptDateAndTime.text  1 ${reserveVehicle.receiptDateAndTime.text.split(' ')[1]}');
                             });
                           },
                         ),
                         context);
                   },
-                  // onChanged: (val) => bloc.validate(val, 1),
                 ),
-
-                // DateTimePicker(
-                //   type: DateTimePickerType.dateTimeSeparate,
-                //   dateMask: 'd MMM, yyyy',
-                //   use24HourFormat: true,
-                //   initialValue: DateTime.now().toString(),
-                //   firstDate: DateTime.now(),
-
-                //   lastDate: DateTime(DateTime.now().year + 1),
-                //   icon: Image.asset(date, height: 30.h, fit: BoxFit.contain),
-                //   locale: const Locale(
-                //     'en',
-                //   ),
-                //   dateLabelText: tr("date"),
-                //   timeLabelText: tr("time"),
-                //   // selectableDayPredicate: (DateTime s) => bloc.setDate(s),
-                //   onChanged: (v) => bloc.setDate(v, null),
-                // ),
                 const Space(
                   boxHeight: 20,
                 ),
                 MasterButton(
                   onPressed: () => bloc.addDate(),
-                  // CupertinoRoundedDatePicker.show(
-                  //   context,
-                  //   locale: const Locale('en'),
-                  //   textColor: black,
-                  //   background: white,
-                  //   borderRadius: 16,
-                  //   // initialDate: DateTime.now(),
-                  //   minimumDate: DateTime.now(),
-                  //   maximumDate: DateTime(DateTime.now().year + 1),
-                  //   use24hFormat: false,
-                  //   initialDatePickerMode:
-                  //       CupertinoDatePickerMode.dateAndTime,
-
-                  //   onDateTimeChanged: (DateTime s) => bloc.setDate(s),
-                  // ),
                   buttonText: tr("add_table"),
                   buttonColor: profileColor,
                   borderColor: profileColor,
                   buttonStyle:
                       TextStyles.appBarStyle.copyWith(color: mainColor),
                 ),
-                // bloc.period == null
-                //     ? Container()
-                //     : Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Text("${bloc.period!.day} ${bloc.period!.time}"),
-                //           TextButton(
-                //               onPressed: () => bloc.addDate(),
-                //               child: Text(tr("add_date"),
-                //                   style: TextStyles.smallStyle
-                //                       .copyWith(color: mainColor))),
-                //         ],
-                //       ),
                 const Space(
                   boxHeight: 25,
                 ),
@@ -345,7 +308,6 @@ class _GradViewState extends State<GradView> {
   }
 
   calenderBottomSheet(BuildContext context) {
-    //  final selectedDate = context.read<AddShipmentCubit>().selectedDate;
     return showDialog(
         context: context,
         builder: (context) {
@@ -359,9 +321,7 @@ class _GradViewState extends State<GradView> {
                     decoration: BoxDecoration(
                         color: white, borderRadius: BorderRadius.circular(20)),
                     child: CupertinoDatePicker(
-                      //  initialDateTime: context.watch<AddShipmentCubit>().newDate,
                       minimumDate: DateTime.now(),
-                      // maximumYear: DateTime.now().add(Duration(days: 365)),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 3650)),
                       mode: CupertinoDatePickerMode.date,
@@ -406,14 +366,10 @@ void _showDialog(Widget child, BuildContext context) {
     builder: (BuildContext context) => Container(
       height: 216,
       padding: const EdgeInsets.only(top: 6.0),
-      // The Bottom margin is provided to align the popup above the system
-      // navigation bar.
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      // Provide a background color for the popup.
       color: CupertinoColors.systemBackground.resolveFrom(context),
-      // Use a SafeArea widget to avoid system overlaps.
       child: SafeArea(
         top: false,
         child: child,

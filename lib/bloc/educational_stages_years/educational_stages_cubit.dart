@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../model/common/educational_stages/educational_years_model.dart';
-import '../../repository/common/educational_years/educational_years_repository.dart';
+import 'package:my_academy/model/common/specializations/lessions_model.dart';
+import 'package:my_academy/service/local/share_prefs_service.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
 import '../../model/common/educational_stages/educational_stages_model.dart';
+import '../../model/common/educational_stages/educational_years_model.dart';
 import '../../model/provider/provider/provider_model.dart';
 import '../../repository/common/educational_stages/educational_stages_repository.dart';
+import '../../repository/common/educational_years/educational_years_repository.dart';
 
 part 'educational_stages_state.dart';
 
@@ -92,9 +94,20 @@ class EducationalStagesCubit extends Cubit<EducationalStagesState> {
   }
 
   getEducationalStages() {
-    educationalStagesRepository.getEducationalStages().then((value) {
-      // initYear(value.educationalStage);
-      emit(EducationalStagesLoadedState(data: value.educationalStage));
+    SharedPrefService prefService = SharedPrefService();
+
+    educationalStagesRepository.getEducationalStages().then((value) async {
+      String? token = await prefService.getValue("token");
+      print("token $token");
+      if (token != "0") {
+        educationalStagesRepository.getLessonsPrices().then((value2) {
+          emit(EducationalStagesLoadedState(
+              data: value.educationalStage, lessonData: value2.data));
+        });
+      } else {
+        emit(EducationalStagesLoadedState(
+            data: value.educationalStage, lessonData: []));
+      }
     });
   }
 

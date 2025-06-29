@@ -425,19 +425,19 @@ class _SpecializationViewState extends State<SpecializationView> {
                                     .copyWith(color: mainColor),
                               ),
                             ),
-                            const Space(
-                              boxWidth: 10,
-                            ),
-                            Expanded(
-                              child: MasterButton(
-                                onPressed: () => bloc.pickEndTime(),
-                                buttonText: bloc.endTime ?? tr("time_to"),
-                                buttonColor: white,
-                                borderColor: textfieldColor,
-                                buttonStyle: TextStyles.appBarStyle
-                                    .copyWith(color: mainColor),
-                              ),
-                            ),
+                            // const Space(
+                            //   boxWidth: 10,
+                            // ),
+                            // Expanded(
+                            //   child: MasterButton(
+                            //     onPressed: () => bloc.pickEndTime(),
+                            //     buttonText: bloc.endTime ?? tr("time_to"),
+                            //     buttonColor: white,
+                            //     borderColor: textfieldColor,
+                            //     buttonStyle: TextStyles.appBarStyle
+                            //         .copyWith(color: mainColor),
+                            //   ),
+                            // ),
                           ],
                         ),
                         const Space(

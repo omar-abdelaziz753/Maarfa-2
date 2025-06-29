@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../res/value/color/color.dart';
 // import 'package:iconsax/iconsax.dart';
@@ -42,11 +41,9 @@ class NotificationButton extends StatelessWidget {
               //   color: mainColor,
               //   size: 30.sp,
               // ),
-              child: SvgPicture.asset(
-                "assets/images/notification_icon2.svg",
+              child: Icon(
+                Icons.notifications_active,
                 color: mainColor,
-                height: 35.r,
-                width: 35.r,
               ),
             ),
           ),

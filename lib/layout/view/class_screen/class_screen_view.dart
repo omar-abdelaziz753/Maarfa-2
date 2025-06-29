@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-
+import 'package:my_academy/layout/activity/user_screens/main/main_screen.dart';
+import '../../../bloc/lessons/lessons_cubit.dart' as lessons;
+import '../../../bloc/bookmark/bookmark_cubit.dart';
 import '../../../bloc/bookmark/bookmark_cubit.dart';
 import '../../../bloc/lessons/lessons_cubit.dart';
 import '../../../model/common/subjects/subjects_model.dart';
@@ -130,21 +132,32 @@ class _ClassScreenViewState extends State<ClassScreenView> {
               boxHeight: 25,
             ),
             Expanded(
-              child: ListView.builder(
-                controller: scrollController,
-                itemCount: bloc.lessonsModel.length,
-                itemBuilder: (context, index) => SubjectCard(
-                  isUser: true,
-                  onTap: () {
-                    bloc.bookmark(index);
-                    BlocProvider.of<BookmarkCubit>(context).addToBookMark(
-                        id: bloc.lessonsModel[index].id!, type: 'lesson');
-                  },
-                  isBlue: bloc.bookmarkList[index],
-                  lessonDetails: bloc.lessonsModel[index],
-                  yearId: widget.yearId,
-                  stageId: widget.stageId,
-                ),
+              child: BlocConsumer<LessonsCubit, LessonsState>(
+                listener: (context, state) {
+                  if (state is lessons.RemoveBookmarkState) {
+                    print('remove');
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+                  }
+                },
+                builder: (context, state) {
+                  return ListView.builder(
+                    controller: scrollController,
+                    itemCount: bloc.lessonsModel.length,
+                    itemBuilder: (context, index) => SubjectCard(
+                      isUser: true,
+                      onTap: () {
+                        bloc.bookmark(index);
+                        BlocProvider.of<BookmarkCubit>(context).addToBookMark(
+                            id: bloc.lessonsModel[index].id!, type: 'lesson',
+                        );
+                      },
+                      isBlue: bloc.bookmarkList[index],
+                      lessonDetails: bloc.lessonsModel[index],
+                      yearId: widget.yearId,
+                      stageId: widget.stageId,
+                    ),
+                  );
+                },
               ),
             ),
             const Space(

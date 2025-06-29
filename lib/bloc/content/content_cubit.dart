@@ -213,10 +213,41 @@ class ContentCubit extends Cubit<ContentState> {
     emit(ChooseEndDateState());
   }
 
+  // pickStartTime() async {
+  //   TimeOfDay? pickedDate = await showTimePicker(
+  //     context: Get.context!,
+  //     // initialEntryMode: DatePickerEntryMode.calendarOnly,
+  //     initialTime: TimeOfDay.now(),
+  //     builder: (context, child) => MediaQuery(
+  //       data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+  //       child: Theme(
+  //         data: ThemeData(
+  //           colorScheme: const ColorScheme.light(
+  //             primary: mainColor,
+  //             onPrimary: white,
+  //             onSurface: mainColor,
+  //           ),
+  //         ),
+  //         child: Localizations.override(
+  //           context: Get.context!,
+  //           locale: const Locale('en', 'US'),
+  //           child: child!,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  //   if (pickedDate != null) {
+  //     startTime = MediaQuery.of(Get.context!).alwaysUse24HourFormat
+  //         ? pickedDate.format(Get.context!)
+  //         : "${pickedDate.hour < 10 ? "0${pickedDate.hour}" : pickedDate.hour}:${pickedDate.minute < 10 ? "0${pickedDate.minute}" : pickedDate.minute}";
+
+  //     endTime
+  //   }
+  //   emit(ChooseStartTimeState());
+  // }
   pickStartTime() async {
     TimeOfDay? pickedDate = await showTimePicker(
       context: Get.context!,
-      // initialEntryMode: DatePickerEntryMode.calendarOnly,
       initialTime: TimeOfDay.now(),
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
@@ -236,11 +267,34 @@ class ContentCubit extends Cubit<ContentState> {
         ),
       ),
     );
+
     if (pickedDate != null) {
-      startTime = MediaQuery.of(Get.context!).alwaysUse24HourFormat
+      final now = DateTime.now();
+      final startDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        pickedDate.hour,
+        pickedDate.minute,
+      );
+
+      final endDateTime = startDateTime.add(const Duration(hours: 1));
+      final endTimeOfDay = TimeOfDay.fromDateTime(endDateTime);
+
+      final use24Hour = MediaQuery.of(Get.context!).alwaysUse24HourFormat;
+
+      startTime = use24Hour
           ? pickedDate.format(Get.context!)
-          : "${pickedDate.hour < 10 ? "0${pickedDate.hour}" : pickedDate.hour}:${pickedDate.minute < 10 ? "0${pickedDate.minute}" : pickedDate.minute}";
+          : "${pickedDate.hour.toString().padLeft(2, '0')}:${pickedDate.minute.toString().padLeft(2, '0')}";
+
+      endTime = use24Hour
+          ? endTimeOfDay.format(Get.context!)
+          : "${endTimeOfDay.hour.toString().padLeft(2, '0')}:${endTimeOfDay.minute.toString().padLeft(2, '0')}";
+
+      print(startTime);
+      print(endTime);
     }
+
     emit(ChooseStartTimeState());
   }
 
@@ -719,5 +773,4 @@ class ContentCubit extends Cubit<ContentState> {
       emit(CoursesLoadedState(courseModel));
     });
   }
-   
 }

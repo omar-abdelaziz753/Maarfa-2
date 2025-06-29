@@ -20,7 +20,6 @@ DefaultAppBar({
     centerTitle: centerTitle ?? true,
     title:
         Text(title, style: TextStyles.appBarStyle.copyWith(color: mainColor)),
-
     leading: isBack == false
         ? const SizedBox()
         : IconButton(

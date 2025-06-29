@@ -144,6 +144,7 @@ class CalenderScreen extends StatelessWidget {
                               lessonId: lessonDetails!.id!,
                               type: 'lesson',
                               lessonDetails: lessonDetails!,
+                              context: context
                             );
                           },
                           sidePadding: 0,

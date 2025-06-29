@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -42,7 +43,6 @@ class AuthProviderRepository {
                 prefService.setValue("user_name", r);
                 updateFCMToken();
                 showToast(tr('welcome'));
-
                 Get.offAll(() => const ProviderMainScreen());
               }));
     } catch (e) {
@@ -269,6 +269,7 @@ class AuthProviderRepository {
 
   updateFCMToken() async {
     final fcmToken = await NotificationService.instance!.getToken();
+    log("fcmmmmm$fcmToken");
     try {
       return DioService().post('/provider/auth/updateFcmToken', body: {
         "fcm_token": fcmToken,

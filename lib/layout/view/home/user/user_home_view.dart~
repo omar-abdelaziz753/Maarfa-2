@@ -1,0 +1,1120 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:my_academy/widget/headers/home/home_header.dart';
+
+import '../../../../bloc/cities/cities_cubit.dart';
+import '../../../../bloc/home/home_cubit.dart';
+import '../../../../bloc/nations/nations_cubit.dart';
+import '../../../../bloc/subscribe/subscribe_cubit.dart';
+import '../../../../repository/provider/home/home_repository.dart';
+import '../../../../res/drawable/image/images.dart';
+import '../../../../res/value/color/color.dart';
+import '../../../../res/value/dimenssion/dimenssions.dart';
+import '../../../../res/value/style/textstyles.dart';
+import '../../../../widget/error/page/error_page.dart';
+import '../../../../widget/image_handler/image_from_network/network_image.dart';
+import '../../../../widget/master_list/custom_list.dart';
+import '../../../../widget/search_home_widget/search_home_widget.dart';
+import '../../../../widget/side_padding/side_padding.dart';
+import '../../../../widget/space/space.dart';
+import '../../../activity/user_screens/course/course_screen.dart';
+import '../../../activity/user_screens/grade/grade_screen.dart';
+import '../../../activity/user_screens/offers/offers_screen.dart';
+import '../../../card_view/current_subject/current_subject_card.dart';
+import '../../../card_view/home/home_card.dart';
+import '../../home/user/user_home_cache_view.dart';
+
+class UserHomeView extends StatefulWidget {
+  const UserHomeView({super.key});
+
+  @override
+  State<UserHomeView> createState() => _UserHomeViewState();
+}
+
+class _UserHomeViewState extends State<UserHomeView> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<CitiesCubit>().getCitiesInSplash();
+    context.read<NationsCubit>().getNationsInSplash();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocProvider(
+        create: (BuildContext context) =>
+            HomeCubit(HomeRepository())..getClientHome(),
+        child: BlocConsumer<HomeCubit, HomeState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              return BlocBuilder<HomeCubit, HomeState>(
+                  builder: (context, state) {
+                if (state is SliderLoadedState) {
+                  final data = (state).data;
+                  return profileView(
+                    context,
+                    data,
+                  );
+
+                  // return CurrentSubjectCard(isLive: userCurrentAction.item, type: userCurrentAction.type??"", courseTitle: userCurrentAction.item.title, name: name, price: price, id: id);
+                } else if (state is SliderErrorState) {
+                  return const ErrorPage();
+                } else {
+                  return const UserHomeCacheView();
+                }
+              });
+            }));
+  }
+
+  profileView(context, data) {
+    return ListView(
+      children: [
+        const Space(
+          boxHeight: 25,
+        ),
+        HomeHeader(
+          isUser: true,
+          data: data,
+        ),
+        const Space(
+          boxHeight: 25,
+        ),
+        const SearchHomeWidget(),
+        const Space(
+          boxHeight: 15,
+        ),
+        BlocProvider.value(
+          value: BlocProvider.of<SubscribeCubit>(context)
+            ..getSubscriptionCourseHome()
+            ..getSubscriptionLessonHome(),
+          child: BlocBuilder<SubscribeCubit, SubscribeState>(
+            builder: (context, susState) {
+              final bloc = SubscribeCubit.get(context);
+
+              return Column(
+                children: [
+                  if ((bloc.subscribeCourseModel != null &&
+                          bloc.subscribeCourseModel!.liveSubscription!
+                              .isNotEmpty) ||
+                      (bloc.subscribeSubjectModel != null &&
+                          bloc.subscribeSubjectModel!.liveSubscription
+                              .isNotEmpty))
+                    susState is SubjectSubscriptionLoadedState
+                        ? CustomList(
+                            listHeight: 100000000000000,
+                            listWidth: screenWidth,
+                            scroll: const NeverScrollableScrollPhysics(),
+                            axis: Axis.vertical,
+                            count: bloc
+                                .subscribeSubjectModel!.liveSubscription.length,
+                            child: (context, index) => Column(
+                                  children: [
+                                    CurrentSubjectCard(
+                                      currentTimeId: bloc
+                                          .subscribeSubjectModel!
+                                          .liveSubscription[index]
+                                          .currentTimeId,
+                                      type: "lesson",
+                                      isLive: true,
+                                      id: bloc.subscribeSubjectModel!
+                                          .liveSubscription[index].lesson.id,
+                                      courseTitle: bloc
+                                          .subscribeSubjectModel!
+                                          .liveSubscription[index]
+                                          .lesson
+                                          .subject!
+                                          .name!,
+                                      price: bloc
+                                          .subscribeSubjectModel!
+                                          .liveSubscription[index]
+                                          .lesson
+                                          .hourPrice!,
+                                      name:
+                                          "${bloc.subscribeSubjectModel!.liveSubscription[index].lesson.provider.title!} ${bloc.subscribeSubjectModel!.liveSubscription[index].lesson.provider.firstName!} ${bloc.subscribeSubjectModel!.liveSubscription[index].lesson.provider.lastName!}",
+                                    ),
+                                    const Space(
+                                      boxHeight: 15,
+                                    ),
+                                  ],
+                                ))
+                        : CustomList(
+                            listHeight: 100000000000000,
+                            listWidth: screenWidth,
+                            scroll: const NeverScrollableScrollPhysics(),
+                            axis: Axis.vertical,
+                            count: bloc
+                                .subscribeCourseModel!.liveSubscription!.length,
+                            child: (context, index) => Column(
+                                  children: [
+                                    CurrentSubjectCard(
+                                      currentTimeId: bloc
+                                          .subscribeCourseModel!
+                                          .liveSubscription![index]
+                                          .currentTimeId,
+                                      type: "course",
+                                      isLive: bloc
+                                                  .subscribeCourseModel!
+                                                  .liveSubscription![index]
+                                                  .course
+                                                  .type ==
+                                              1
+                                          ? false
+                                          : true,
+                                      image: bloc
+                                          .subscribeCourseModel!
+                                          .liveSubscription![index]
+                                          .course
+                                          .image!,
+                                      id: bloc.subscribeCourseModel!
+                                          .liveSubscription![index].course.id!,
+                                      courseTitle: bloc
+                                          .subscribeCourseModel!
+                                          .liveSubscription![index]
+                                          .course
+                                          .name!,
+                                      price: bloc
+                                          .subscribeCourseModel!
+                                          .liveSubscription![index]
+                                          .course
+                                          .price,
+                                      name:
+                                          "${bloc.subscribeCourseModel!.liveSubscription![index].course.provider.title!} ${bloc.subscribeCourseModel!.liveSubscription![index].course.provider.firstName!} ${bloc.subscribeCourseModel!.liveSubscription![index].course.provider.lastName!}",
+                                    ),
+                                    const Space(
+                                      boxHeight: 15,
+                                    ),
+                                  ],
+                                )),
+                  SizedBox(
+                    width: screenWidth,
+                    height: 245.h,
+                    child: Swiper(
+                      autoplay: true,
+                      itemCount: data.data.offers!.length,
+                      viewportFraction: 0.9,
+                      scale: 0.92,
+                      pagination: SwiperPagination(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        builder: DotSwiperPaginationBuilder(
+                          color: mainColor.withOpacity(0.2),
+                          activeColor: accentColor,
+                          size: 6.0,
+                          activeSize: 8.0,
+                        ),
+                      ),
+                      itemBuilder: (context, index) {
+                        final offer = data.data.offers![index];
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(16.r),
+                          onTap: () => Get.to(() => const OffersScreen()),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: white,
+                              borderRadius: BorderRadius.circular(16.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16.r),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Top Image
+                                  AspectRatio(
+                                    aspectRatio: 16 / 6,
+                                    child: CachedImage(
+                                      imageUrl: offer.image!,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 10),
+
+                                  // Offer Title
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Text(
+                                      offer.name!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyles.textView16SemiBold.copyWith(
+                                        color: cvColor,
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 4),
+
+                                  // Offer Description
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Text(
+                                      offer.content!,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyles.hintStyle.copyWith(fontSize: 13.sp),
+                                    ),
+                                  ),
+
+                                  const Spacer(),
+
+                                  // CTA Button (Optional)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 16.0, bottom: 12.0, top: 8),
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        "View Details →",
+                                        style: TextStyle(
+                                          fontSize: 13.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: accentColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+
+                  // SizedBox(
+                  //   width: screenWidth,
+                  //   height: 260.h,
+                  //   child: Swiper(
+                  //     autoplay: true,
+                  //     itemCount: data.data.offers!.length,
+                  //     itemBuilder: (context, index) => InkWell(
+                  //       onTap: () => Get.to(() => const OffersScreen()),
+                  //       child: Container(
+                  //           clipBehavior: Clip.antiAliasWithSaveLayer,
+                  //           decoration: BoxDecoration(
+                  //               color: white,
+                  //               borderRadius: BorderRadius.circular(10.r)),
+                  //           height: 250.h,
+                  //           width: screenWidth,
+                  //           child: Column(
+                  //             mainAxisAlignment: MainAxisAlignment.start,
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             children: [
+                  //               Material(
+                  //                 borderRadius: BorderRadius.circular(15.r),
+                  //                 elevation: 0.5,
+                  //                 child: ClipRRect(
+                  //                   borderRadius: BorderRadius.circular(15.r),
+                  //                   child: CachedImage(
+                  //                     imageUrl: data.data.offers![index].image!,
+                  //                     width: screenWidth,
+                  //                     height: 150,
+                  //                     fit: BoxFit.fill,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //               const Space(boxHeight: 10),
+                  //               SidePadding(
+                  //                 sidePadding: 15,
+                  //                 child: Text(data.data.offers![index].name!,
+                  //                     style: TextStyles.textView14SemiBold
+                  //                         .copyWith(color: cvColor)),
+                  //               ),
+                  //               SidePadding(
+                  //                 sidePadding: 15,
+                  //                 child: Text(data.data.offers![index].content!,
+                  //                     maxLines: 2,
+                  //                     softWrap: true,
+                  //                     overflow: TextOverflow.clip,
+                  //                     style: TextStyles.hintStyle),
+                  //               ),
+                  //             ],
+                  //           )),
+                  //     ),
+                  //     viewportFraction: 0.9,
+                  //     scale: .90,
+                  //     pagination: SwiperPagination(
+                  //       margin: const EdgeInsets.only(bottom: 5),
+                  //       builder: DotSwiperPaginationBuilder(
+                  //           color: mainColor.withOpacity(0.1),
+                  //           activeColor: accentColor),
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              );
+            },
+          ),
+        ),
+        const Space(
+          boxHeight: 15,
+        ),
+
+        /// Best Teachers
+        Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.h),
+              child: Text(
+                tr("best_teachers"),
+                style: TextStyles.titleStyle.copyWith(color: black),
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {},
+              // onPressed: () => Get.to(() => const TeachersScreen()),
+              child: Text(
+                tr("view_all"),
+                style: TextStyles.hintStyle.copyWith(
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w700,
+                  decorationColor: grey,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Space(
+          boxHeight: 15,
+        ),
+        BestTeachersCard(
+          teachers: [
+            TeacherModel(
+              name: "John Doe",
+              imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+              subject: "Mathematics",
+              rating: 4.5,
+            ),
+            TeacherModel(
+              name: "Jane Smith",
+              imageUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+              subject: "Physics",
+              rating: 4.8,
+            ),
+            TeacherModel(
+              name: "Mark Johnson",
+              imageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+              subject: "Chemistry",
+              rating: 4.6,
+            ),
+          ],
+        ),
+
+
+        const Space(
+          boxHeight: 15,
+        ),
+        RightHomeCard(
+          title: tr("need_subject"),
+          buttonText: tr("grades"),
+          image: onlineSubject,
+          subTitle: tr("subject_available"),
+          onTap: () => Get.to(() => const GradeScreen()),
+        ),
+        LeftHomeCard(
+          title: tr("need_course"),
+          buttonText: tr("courses"),
+          image: course,
+          subTitle: tr("course_available"),
+          onTap: () => Get.to(() => const CourseScreen()),
+        ),
+        const Space(
+          boxHeight: 50,
+        ),
+      ],
+    );
+  }
+}
+
+// class BestTeachersCard extends StatelessWidget {
+//   final List<TeacherModel> teachers;
+//
+//   const BestTeachersCard({super.key, required this.teachers});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       height: 210.h,
+//       child: ListView.separated(
+//         scrollDirection: Axis.horizontal,
+//         padding: EdgeInsets.symmetric(horizontal: 16.w),
+//         itemCount: teachers.length,
+//         separatorBuilder: (_, __) => SizedBox(width: 12.w),
+//         itemBuilder: (context, index) {
+//           final teacher = teachers[index];
+//           return GestureDetector(
+//             onTap: () {
+//               // Navigate to detail screen or perform action
+//               // Get.to(() => TeacherDetailScreen(teacher: teacher));
+//             },
+//             child: Container(
+//               width: 150.w,
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(16.r),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.black.withOpacity(0.05),
+//                     blurRadius: 8,
+//                     offset: const Offset(0, 4),
+//                   ),
+//                 ],
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   // Image
+//                   ClipRRect(
+//                     borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+//                     child: CachedNetworkImage(
+//                       imageUrl: teacher.imageUrl,
+//                       width: 150.w,
+//                       height: 100.h,
+//                       fit: BoxFit.cover,
+//                       placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+//                       errorWidget: (context, url, error) => const Icon(Icons.error),
+//                     ),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           teacher.name,
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis,
+//                           style: TextStyles.textView14SemiBold.copyWith(color: black),
+//                         ),
+//                         const SizedBox(height: 4),
+//                         Text(
+//                           teacher.subject,
+//                           style: TextStyles.hintStyle.copyWith(fontSize: 12.sp),
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis,
+//                         ),
+//                         const SizedBox(height: 4),
+//                         Row(
+//                           children: [
+//                             Icon(Icons.star, size: 14.sp, color: Colors.amber),
+//                             SizedBox(width: 4.w),
+//                             Text(
+//                               teacher.rating.toStringAsFixed(1),
+//                               style: TextStyle(fontSize: 12.sp, color: Colors.grey[700]),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+class BestTeachersCard extends StatelessWidget {
+  final List<TeacherModel> teachers;
+
+  const BestTeachersCard({super.key, required this.teachers});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 280.h, // Increased for better proportions
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        itemCount: teachers.length,
+        separatorBuilder: (_, __) => SizedBox(width: 20.w),
+        itemBuilder: (context, index) {
+          final teacher = teachers[index];
+          return _ModernTeacherCard(teacher: teacher, index: index);
+        },
+      ),
+    );
+  }
+}
+
+class _ModernTeacherCard extends StatefulWidget {
+  final TeacherModel teacher;
+  final int index;
+
+  const _ModernTeacherCard({required this.teacher, required this.index});
+
+  @override
+  State<_ModernTeacherCard> createState() => _ModernTeacherCardState();
+}
+
+class _ModernTeacherCardState extends State<_ModernTeacherCard>
+    with TickerProviderStateMixin {
+  late AnimationController _hoverController;
+  late AnimationController _tapController;
+  late Animation<double> _elevationAnimation;
+  late Animation<double> _scaleAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  bool _isHovered = false;
+
+  // Gradient colors for different cards
+  static const List<List<Color>> _gradientColors = [
+    [Color(0xFF6366F1), Color(0xFF8B5CF6)], // Purple-Indigo
+    [Color(0xFF06B6D4), Color(0xFF3B82F6)], // Cyan-Blue
+    [Color(0xFF10B981), Color(0xFF059669)], // Emerald-Green
+    [Color(0xFFF59E0B), Color(0xFFEF4444)], // Amber-Red
+    [Color(0xFFEC4899), Color(0xFF8B5CF6)], // Pink-Purple
+    [Color(0xFF8B5CF6), Color(0xFF06B6D4)], // Purple-Cyan
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _setupAnimations();
+  }
+
+  void _setupAnimations() {
+    _hoverController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _tapController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+
+    _elevationAnimation = Tween<double>(
+      begin: 8.0,
+      end: 20.0,
+    ).animate(CurvedAnimation(
+      parent: _hoverController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _tapController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0),
+      end: const Offset(0, -0.02),
+    ).animate(CurvedAnimation(
+      parent: _hoverController,
+      curve: Curves.easeOutCubic,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    _tapController.dispose();
+    super.dispose();
+  }
+
+  List<Color> get _cardGradient =>
+      _gradientColors[widget.index % _gradientColors.length];
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: Listenable.merge([_hoverController, _tapController]),
+      builder: (context, child) {
+        return SlideTransition(
+          position: _slideAnimation,
+          child: Transform.scale(
+            scale: _scaleAnimation.value,
+            child: MouseRegion(
+              onEnter: (_) => _onHover(true),
+              onExit: (_) => _onHover(false),
+              child: GestureDetector(
+                onTapDown: (_) => _tapController.forward(),
+                onTapUp: (_) => _handleTap(),
+                onTapCancel: () => _tapController.reverse(),
+                child: Container(
+                  width: 180.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _cardGradient[0].withOpacity(0.3),
+                        blurRadius: _elevationAnimation.value,
+                        offset: Offset(0, _elevationAnimation.value / 2),
+                        spreadRadius: 2,
+                      ),
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: _elevationAnimation.value / 2,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24.r),
+                    child: _buildCardContent(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _onHover(bool isHovered) {
+    setState(() => _isHovered = isHovered);
+    if (isHovered) {
+      _hoverController.forward();
+    } else {
+      _hoverController.reverse();
+    }
+  }
+
+  void _handleTap() {
+    _tapController.reverse();
+    HapticFeedback.mediumImpact();
+    // Navigation logic here
+    // Get.to(() => TeacherDetailScreen(teacher: widget.teacher));
+  }
+
+  Widget _buildCardContent() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            Colors.white.withOpacity(0.95),
+          ],
+        ),
+      ),
+      child: Column(
+        children: [
+          _buildHeaderSection(),
+          _buildImageSection(),
+          _buildContentSection(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderSection() {
+    return Container(
+      height: 40.h,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: _cardGradient,
+        ),
+      ),
+      child: Stack(
+        children: [
+          // Decorative pattern
+          Positioned(
+            right: -20.w,
+            top: -20.h,
+            child: Container(
+              width: 60.w,
+              height: 60.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          Positioned(
+            right: -10.w,
+            top: -30.h,
+            child: Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.05),
+              ),
+            ),
+          ),
+          // Online status
+          if (widget.teacher.isOnline ?? false)
+            Positioned(
+              top: 8.h,
+              right: 12.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: Colors.white.withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6.w,
+                      height: 6.h,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      'Online',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageSection() {
+    return Container(
+      height: 120.h,
+      width: double.infinity,
+      margin: EdgeInsets.all(16.w),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.r),
+            child: CachedNetworkImage(
+              imageUrl: widget.teacher.imageUrl,
+              width: double.infinity,
+              height: 120.h,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => _buildImagePlaceholder(),
+              errorWidget: (context, url, error) => _buildImageError(),
+            ),
+          ),
+          // Gradient overlay
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 40.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Rating badge
+          Positioned(
+            top: 8.h,
+            left: 8.w,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(12.r),
+                // backdrop: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    size: 12.sp,
+                    color: Colors.amber,
+                  ),
+                  SizedBox(width: 2.w),
+                  Text(
+                    widget.teacher.rating.toStringAsFixed(1),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImagePlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.grey[100]!,
+            Colors.grey[200]!,
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(_cardGradient[0]),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Loading...',
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageError() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.grey[50]!,
+            Colors.grey[100]!,
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.person_outline_rounded,
+              size: 24.sp,
+              color: Colors.grey[400],
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'No Photo',
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Colors.grey[500],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContentSection() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Name
+            Text(
+              widget.teacher.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF1F2937),
+                letterSpacing: -0.5,
+              ),
+            ),
+            SizedBox(height: 4.h),
+
+            // Subject with icon
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(4.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: _cardGradient),
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Icon(
+                    _getSubjectIcon(widget.teacher.subject),
+                    size: 10.sp,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(width: 6.w),
+                Expanded(
+                  child: Text(
+                    widget.teacher.subject,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+
+            const Spacer(),
+
+            // Stats row
+            Row(
+              children: [
+                _buildStatChip(
+                  icon: Icons.people_outline_rounded,
+                  label: '${widget.teacher.studentCount ?? 0}',
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 8.w),
+                _buildStatChip(
+                  icon: Icons.schedule_rounded,
+                  label: '${widget.teacher.experience ?? 0}y',
+                  color: Colors.green,
+                ),
+                const Spacer(),
+                // Favorite button
+                Container(
+                  width: 32.w,
+                  height: 32.h,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: Icon(
+                    Icons.favorite_border_rounded,
+                    size: 16.sp,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatChip({
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12.sp, color: color),
+          SizedBox(width: 4.w),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getSubjectIcon(String subject) {
+    final subjectLower = subject.toLowerCase();
+    if (subjectLower.contains('math')) return Icons.calculate_rounded;
+    if (subjectLower.contains('science')) return Icons.science_rounded;
+    if (subjectLower.contains('english')) return Icons.translate_rounded;
+    if (subjectLower.contains('history')) return Icons.history_edu_rounded;
+    if (subjectLower.contains('art')) return Icons.palette_rounded;
+    if (subjectLower.contains('music')) return Icons.music_note_rounded;
+    return Icons.school_rounded;
+  }
+}
+
+// Enhanced TeacherModel extensions
+extension TeacherModelExtension on TeacherModel {
+  bool? get isOnline => null; // Add to your model
+  int? get studentCount => null; // Add to your model
+  int? get experience => null; // Add to your model
+}
+class TeacherModel {
+  final String name;
+  final String imageUrl;
+  final String subject;
+  final double rating;
+
+  TeacherModel({
+    required this.name,
+    required this.imageUrl,
+    required this.subject,
+    required this.rating,
+  });
+}

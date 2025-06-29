@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:my_academy/model/common/specializations/lessions_model.dart';
 
 import '../../../layout/activity/provider_screens/main/main_screen.dart';
 import '../../../model/common/educational_stages/educational_stages_db_response.dart';
@@ -37,6 +38,19 @@ class EducationalStagesRepository {
               }));
     } catch (e) {
       return debugPrint(e.toString());
+    }
+  }
+
+  getLessonsPrices() async {
+    try {
+      return await DioService()
+          .get('/lesson')
+          .then((value) => value.fold((l) => showToast(l), (r) {
+                LessonModelPrice specializations = LessonModelPrice.fromJson(r);
+                return specializations;
+              }));
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }
