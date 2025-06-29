@@ -91,6 +91,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../../model/common/notifications/notification_model.dart';
 import '../../../res/value/color/color.dart';
 import '../../../res/value/style/textstyles.dart';
@@ -222,7 +223,8 @@ class NotificationsCard extends StatelessWidget {
                         child: OutlinedButton(
                           onPressed: _viewDetails,
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                            side:
+                                BorderSide(color: Colors.grey.withOpacity(0.3)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.r),
                             ),
@@ -316,15 +318,22 @@ class NotificationsCard extends StatelessWidget {
       case "YourRequestWasAccepted.Course":
       case "YourRequestWasAccepted.Lesson":
         return () => Get.to(() => PayScreen(
-          id: data.objectId,
-          type: data.type == "YourRequestWasAccepted.Course" ? "course" : "lesson",
-        ));
+              id: data.objectId is int
+                  ? data.objectId
+                  : int.parse(data.objectId),
+              type: data.type == "YourRequestWasAccepted.Course"
+                  ? "course"
+                  : "lesson",
+            ));
       case "YouHaveNewRequest.Course":
       case "YouHaveNewRequest.Lesson":
         return () => Get.to(() => RequestsSentScreen(
-          id: data.objectId,
-          type: data.type == "YouHaveNewRequest.Course" ? "course" : "lesson",
-        ));
+              id: data.objectId is int
+                  ? data.objectId
+                  : int.parse(data.objectId),
+              type:
+                  data.type == "YouHaveNewRequest.Course" ? "course" : "lesson",
+            ));
       default:
         return null;
     }
@@ -447,13 +456,16 @@ class NotificationsCard extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildDetailRow(tr("notification_type"), _getNotificationTypeDisplay()),
+                  _buildDetailRow(
+                      tr("notification_type"), _getNotificationTypeDisplay()),
                   if (data.objectId != null) ...[
                     Space(boxHeight: 8.h),
-                    _buildDetailRow(tr("reference_id"), data.objectId!.toString()),
+                    _buildDetailRow(
+                        tr("reference_id"), data.objectId!.toString()),
                   ],
                   Space(boxHeight: 8.h),
-                  _buildDetailRow(tr("received_at"), _formatTimestamp(data.createdAt)),
+                  _buildDetailRow(
+                      tr("received_at"), _formatTimestamp(data.createdAt)),
                 ],
               ),
             ),
