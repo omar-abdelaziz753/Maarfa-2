@@ -41,6 +41,7 @@ class LessonPayView extends StatelessWidget {
             builder: (context, state) {
               return BlocBuilder<PayCubit, PayState>(builder: (context, state) {
                 if (state is PayLoadedState) {
+                  // print("a77777");
                   final data = (state).data;
                   return coursePayView(context, data);
                 } else if (state is PayErrorState) {
@@ -77,7 +78,7 @@ class LessonPayView extends StatelessWidget {
                     const Space(
                       boxHeight: 30,
                     ),
-                    isRequest
+                    data.status != 2
                         ? const SizedBox()
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +217,7 @@ class LessonPayView extends StatelessWidget {
                     const Space(
                       boxHeight: 30,
                     ),
-                    data.status == 4 || isRequest == true
+                    data.status != 2
                         ? const SizedBox()
                         : MasterLoadButton(
                             buttonController: bloc.payController,
