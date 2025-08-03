@@ -14,7 +14,7 @@
 
 // import '../../../bloc/lesson_details/lesson_details_provider_cubit.dart';
 // import '../../../bloc/provider_course_details/provider_course_details_cubit.dart';
-// import '../../../model/common/lessons/lesson_model.dart';
+// import '../../../models/common/lessons/lesson_model.dart';
 // import '../../../repository/provider/lesson_details/lesson_details_repository.dart';
 // import '../../../res/value/color/color.dart';
 // import '../../../widget/alert/delete/delete_alert.dart';

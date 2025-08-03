@@ -9,7 +9,7 @@ class CoursesRepository {
   getCourses(type, Map<String, dynamic> filter) async {
     try {
       return await DioService()
-          .get('/clients/courses?$type', queryParams: filter)
+          .get(type == '' ? '/clients/courses/list' : '/clients/courses/list?$type', queryParams: filter)
           .then((value) {
         return value.fold((l) => showToast(l), (r) {
           CoursesDetailsDbResponse courses =

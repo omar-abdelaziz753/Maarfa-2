@@ -1,5 +1,5 @@
-// import 'package:my_academy/model/common/consultations/consultations_model.dart';
-// import 'package:my_academy/model/common/time/time_model.dart';
+// import 'package:my_academy/models/common/consultations/consultations_model.dart';
+// import 'package:my_academy/models/common/time/time_model.dart';
 // import '../provider/provider_model.dart';
 //
 // class ShowConsultationModel {

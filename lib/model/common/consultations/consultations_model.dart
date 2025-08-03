@@ -1,4 +1,4 @@
-// import 'package:my_academy/model/common/specializations/specializations_model.dart';
+// import 'package:my_academy/models/common/specializations/specializations_model.dart';
 //
 // class ConsultationsModel {
 //   ConsultationsModel({

@@ -304,8 +304,8 @@ class _TeacherCardState extends State<_TeacherCard>
 
 // Enhanced TeacherModel (add these properties if not already present)
 extension TeacherModelExtension on TeacherModel {
-  bool? get isOnline => null; // Add this to your model
-  int? get studentCount => null; // Add this to your model
+  bool? get isOnline => null; // Add this to your models
+  int? get studentCount => null; // Add this to your models
 }
 
 class TeacherModel {

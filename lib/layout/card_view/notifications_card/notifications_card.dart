@@ -2,7 +2,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:get/get.dart';
-// import '../../../model/common/notifications/notification_model.dart';
+// import '../../../models/common/notifications/notification_model.dart';
 // import '../../../res/value/color/color.dart';
 // import '../../../res/value/style/textstyles.dart';
 // import '../../../widget/buttons/master/master_button.dart';

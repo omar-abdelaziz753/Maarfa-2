@@ -6,7 +6,7 @@
 // import 'package:my_academy/layout/card_view/share_live_bottom_sheet/share_live_link_bottom_sheet.dart';
 
 // import '../../../bloc/live/live_cubit.dart';
-// import '../../../model/provider/home/home_db_response.dart';
+// import '../../../models/provider/home/home_db_response.dart';
 // import '../../../repository/live/live_repository.dart';
 // import '../../../res/drawable/icon/icons.dart';
 // import '../../../res/value/color/color.dart';

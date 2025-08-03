@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:my_academy/bloc/auth/show_delete_and_payment/show_delete_and_paymnet_cubit.dart';
+import 'package:my_academy/layout/view/profile/managers/contact_support_service_cubit.dart';
+import 'package:my_academy/layout/view/profile/profile/contact_support_service_screen.dart';
 
 import '../../../../../widget/error/page/error_page.dart';
 import '../../../../bloc/auth/provider/auth_provider_cubit.dart';
@@ -182,10 +184,24 @@ class _ProfileViewState extends State<ProfileView> {
                           onTap: () =>
                               Get.to(TermsScreen(isUser: widget.isUser))),
                       ProfileButton(
+                          title: tr("contact_support_service"),
+                          image: contactusMore,
+                          onTap: () {
+                            Get.to(() => BlocProvider(
+                              create: (context) => ContactSupportServiceCubit()..getAllSupportData(),
+                              child: const ContactSupportServiceScreen(),
+                            ));
+                          }),
+                      ProfileButton(
+                          title: tr("chatting"),
+                          image: contactusMore,
+                          onTap: () {
+                          }),
+                      ProfileButton(
                           title: tr("contact_us"),
                           image: contactusMore,
                           onTap: () {
-                            Get.to(() => const ContactUsScreen());
+                            // Get.to(() => const ContactUsScreen());
                           }),
                       ProfileButton(
                           title: tr("about_us"),

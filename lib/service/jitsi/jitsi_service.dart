@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
-
-
 import '../network/dio/dio_service.dart';
 
 class JitsiService {

@@ -3,7 +3,7 @@
 // import 'package:get/get.dart';
 // import 'package:my_academy/layout/card_view/discount_code_card/discount_code_card.dart';
 // import 'package:my_academy/layout/card_view/payment_card/payment_card.dart';
-// import 'package:my_academy/model/common/courses/course_details/course_details_model.dart';
+// import 'package:my_academy/models/common/courses/course_details/course_details_model.dart';
 // import 'package:my_academy/res/value/style/textstyles.dart';
 // import 'package:my_academy/widget/app_bar/default_app_bar/default_app_bar.dart';
 // import 'package:my_academy/widget/buttons/master/master_button.dart';

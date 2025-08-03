@@ -104,9 +104,10 @@ class CourseSubjectCubit extends Cubit<CourseSubjectState> {
             ? filter.remove("maxPrice")
             : () {}
         : () {};
-    filter.putIfAbsent("specialization_ids[]", () => id);
+    // filter.putIfAbsent("specialization_ids[]", () => id);
     coursesRepository
-        .getCourses(type == 1 ? "/" : "&type=$type", filter)
+        .getCourses(type == 1 ? "" : "&type=$type", filter)
+        // .getCourses(type == 1 ? "/list" : "&type=$type", filter)
         .then((value) {
       emit(CourseLoadedState(data: value.data.courses));
     });

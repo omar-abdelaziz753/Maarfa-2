@@ -140,11 +140,14 @@ class CalenderScreen extends StatelessWidget {
                         MasterLoadButton(
                           buttonController: bloc.authController,
                           onPressed: () {
-                            bloc.validateRequest(
+                            bloc.addRequestLesson(
                               lessonId: lessonDetails!.id!,
-                              type: 'lesson',
-                              lessonDetails: lessonDetails!,
+                              // type: 'lesson',
+                              // lessonDetails: lessonDetails!,
+                                times: bloc.times,
                               context: context
+
+
                             );
                           },
                           sidePadding: 0,

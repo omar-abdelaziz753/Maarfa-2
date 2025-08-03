@@ -318,7 +318,7 @@ class Course {
   int? id;
   String? name;
   String? content;
-  Specialization? specialization; // Reusing Specialization model
+  Specialization? specialization; // Reusing Specialization models
   int? type;
   int? attendanceType;
   int? maxStudents;

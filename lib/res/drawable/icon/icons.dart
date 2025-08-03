@@ -51,6 +51,7 @@ const walletMore = "assets/images/wallet.svg";
 const privacyMore = "assets/icons/insurance.svg";
 const termsMore = "assets/icons/terms-and-conditions.svg";
 const contactusMore = "assets/icons/contact-us.svg";
+const chattingMore = "assets/icons/contact-us.svg";
 const whousMore = "assets/icons/info.svg";
 const languageMore = "assets/icons/language.svg";
 const deleteMore = "assets/icons/user.svg";

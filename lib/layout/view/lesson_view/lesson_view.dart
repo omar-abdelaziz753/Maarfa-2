@@ -2,7 +2,7 @@
 // import 'package:flutter_bloc/flutter_bloc.dart';
 
 // import '../../../bloc/bookmark/bookmark_cubit.dart';
-// import '../../../model/common/lessons/lesson_model.dart';
+// import '../../../models/common/lessons/lesson_model.dart';
 // import '../../../res/value/dimenssion/dimenssions.dart';
 // import '../../../widget/master_list/custom_list.dart';
 // import '../../card_view/subject/subject_card.dart';

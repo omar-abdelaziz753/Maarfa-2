@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:my_academy/layout/activity/auth/login/google_login_button.dart';
 
 import '../../../../bloc/auth/user/auth_cubit.dart';
 import '../../../../repository/user/auth_user/auth_user_repository.dart';
@@ -31,11 +32,20 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
+  bool isGoogleLoading = false;
+
   toggleLoading() {
     setState(() {
       isLoading = !isLoading;
     });
   }
+
+  toggleGoogleLoading() {
+    setState(() {
+      isGoogleLoading = !isGoogleLoading;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +135,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                             // :bloc.providerLogin(),
                             ),
+                    const Space(
+                      boxHeight: 25,
+                    ),
+                    /// Google Button Login
+                    GoogleLoginButton(
+                      onPressed: () async {
+                        toggleGoogleLoading();
+                        try {
+                          // Add your Google login logic here
+                          // Example: await bloc.signInWithGoogle();
+                          print("Google login pressed");
+                        } catch (e) {
+                          print("Google login error: $e");
+                        } finally {
+                          toggleGoogleLoading();
+                        }
+                      },
+                      isLoading: isGoogleLoading,
+                      sidePadding: 15,
+                    ),
                     const Space(
                       boxHeight: 25,
                     ),

@@ -8,7 +8,10 @@
     "or": "OR",
     "from": "From",
     "to": "To",
-
+    "continue_with_google": "Continue with Google",
+    "contact_support_service": "Contact Support Service",
+    "chatting": "Chatting",
+    "contact_support": "Contact Support",
     "specializations": "Specializations",
     "oops_something_went_wrong": "Oops! Something went wrong",
     "no_specializations_found": "No Specializations Found",

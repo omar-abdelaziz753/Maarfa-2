@@ -1899,11 +1899,9 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                 onPressed: addRequestState.times.isNotEmpty
                     ? () {
                         Navigator.pop(context);
-                        addRequestState.validateRequest(
+                        addRequestState.addRequestLesson(
                           lessonId: lesson.id!,
-                          type: 'lesson',
-                          lessonDetails: lesson,
-                          isHome: true,
+                        times: addRequestState.times,
                           context: context,
                         );
                       }

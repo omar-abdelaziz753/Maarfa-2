@@ -93,31 +93,31 @@ class AddRequestCubit extends Cubit<AddRequestState> {
     emit(IsSelectedChipState());
   }
 
-  validateRequest(
-      {required int lessonId,
-      required String type,
-      required dynamic lessonDetails,
-      required BuildContext context,
-      bool? isHome = false}) async {
-    if (times.isEmpty) {
-      //Todo: add to lang files
-      //authController.reset();
-      showToast(tr("please_add_at_least_one_time"));
-      authController.reset();
-    } else {
-      addRequestsRepository
-          .validateRequest(
-            id: lessonId,
-            type: type,
-            times: times,
-            lessonDetails: lessonDetails,
-            isHome: isHome,
-            context: context,
-          )
-          .whenComplete(() => authController.reset());
-    }
-    emit(ValidateRequest());
-  }
+  // validateRequest(
+  //     {required int lessonId,
+  //     required String type,
+  //     required dynamic lessonDetails,
+  //     required BuildContext context,
+  //     bool? isHome = false}) async {
+  //   if (times.isEmpty) {
+  //     //Todo: add to lang files
+  //     //authController.reset();
+  //     showToast(tr("please_add_at_least_one_time"));
+  //     authController.reset();
+  //   } else {
+  //     addRequestsRepository
+  //         .validateRequest(
+  //           id: lessonId,
+  //           type: type,
+  //           times: times,
+  //           lessonDetails: lessonDetails,
+  //           isHome: isHome,
+  //           context: context,
+  //         )
+  //         .whenComplete(() => authController.reset());
+  //   }
+  //   emit(ValidateRequest());
+  // }
 
   addRequestCourse({
     required int courseId,

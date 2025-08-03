@@ -459,7 +459,7 @@ class SpecializationGrid extends StatelessWidget {
 // import 'package:get/get.dart';
 // import 'package:my_academy/widget/image_handler/image_from_network/network_image.dart';
 //
-// import '../../../model/common/courses/course_details/course_details_model.dart';
+// import '../../../models/common/courses/course_details/course_details_model.dart';
 // import '../../../res/value/color/color.dart';
 // import '../../../res/value/dimenssion/dimenssions.dart';
 // import '../../../res/value/style/textstyles.dart';

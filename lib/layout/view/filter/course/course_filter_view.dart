@@ -19,6 +19,7 @@ class CourseFilterView extends StatelessWidget {
   final int id;
   final int? yearId;
   final Map<String, dynamic>? filter;
+
   const CourseFilterView(
       {super.key,
       required this.title,
@@ -50,269 +51,263 @@ class CourseFilterView extends StatelessWidget {
 
   filterView(context, data) {
     return BlocProvider(
-        create: (BuildContext context) => FilterCubit()
-          ..initPrice(filter, data)
-          ..initRate(filter)
-          ..initSpecialzation(filter)
-          ..initStatus(filter),
-        child: BlocConsumer<FilterCubit, FilterState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              final bloc = FilterCubit.get(context);
-              return SidePadding(
-                sidePadding: 15,
-                child: ListView(
-                  children: [
-                    type != 'course'
-                        ? Container()
-                        : ExpansionTile(
-                            title: Text(
-                              tr("the_specialty"),
-                              style:
-                                  TextStyles.agreeStyle.copyWith(color: black),
-                            ),
-                            children: [
-                              Wrap(
-                                children: List.generate(
-                                  bloc.specializationList!.length,
-                                  (index) => Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 2.h, horizontal: 3.w),
-                                    child: ChoiceChip(
-                                      backgroundColor: white,
-                                      shape: RoundedRectangleBorder(
-                                          side: const BorderSide(
-                                              color: textfieldColor),
-                                          borderRadius:
-                                              BorderRadius.circular(25.r)),
-                                      onSelected: (t) {
-                                        bloc.changeSelectedSpecialization(index,
-                                            bloc.specializationList![index]);
-                                        bloc.getFiltersMap(
-                                            'specialization_ids[]',
-                                            bloc.specializationList![index]
-                                                .id!);
-                                      },
-                                      selectedColor: mainColor,
-                                      label: Text(
-                                          bloc.specializationList![index].name!,
-                                          style: TextStyles.unselectedStyle
-                                              .copyWith(
-                                                  color:
-                                                      bloc.selectedSpecialization ==
-                                                              index
-                                                          ? white
-                                                          : grey)),
-                                      selected:
-                                          bloc.selectedSpecialization == index
-                                              ? true
-                                              : false,
-                                    ),
-                                  ),
+      create: (BuildContext context) => FilterCubit()
+        ..initPrice(filter, data)
+        ..initRate(filter)
+        ..initSpecialzation(filter)
+        ..initStatus(filter),
+      child: BlocConsumer<FilterCubit, FilterState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          final bloc = FilterCubit.get(context);
+          return SidePadding(
+            sidePadding: 15,
+            child: ListView(
+              children: [
+                type != 'course'
+                    ? Container()
+                    : ExpansionTile(
+                        title: Text(
+                          tr("the_specialty"),
+                          style: TextStyles.agreeStyle.copyWith(color: black),
+                        ),
+                        children: [
+                          Wrap(
+                            children: List.generate(
+                              bloc.specializationList!.length,
+                              (index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.h, horizontal: 3.w),
+                                child: ChoiceChip(
+                                  backgroundColor: white,
+                                  shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          color: textfieldColor),
+                                      borderRadius:
+                                          BorderRadius.circular(25.r)),
+                                  onSelected: (t) {
+                                    bloc.changeSelectedSpecialization(
+                                        index, bloc.specializationList![index]);
+                                    bloc.getFiltersMap('specialization_ids[]',
+                                        bloc.specializationList![index].id!);
+                                  },
+                                  selectedColor: mainColor,
+                                  label: Text(
+                                      bloc.specializationList![index].name!,
+                                      style: TextStyles.unselectedStyle
+                                          .copyWith(
+                                              color:
+                                                  bloc.selectedSpecialization ==
+                                                          index
+                                                      ? white
+                                                      : grey)),
+                                  selected: bloc.selectedSpecialization == index
+                                      ? true
+                                      : false,
                                 ),
                               ),
-                            ],
-                          ),
-                    Space(
-                      boxHeight: 20.h,
-                    ),
-                    type != 'course'
-                        ? Container()
-                        : ExpansionTile(
-                            title: Text(
-                              tr("rate"),
-                              style:
-                                  TextStyles.agreeStyle.copyWith(color: black),
                             ),
-                            children: [
-                              Wrap(
-                                children: List.generate(
-                                  5,
-                                  (index) => Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 2.h, horizontal: 3.w),
-                                    child: ChoiceChip(
-                                      backgroundColor: white,
-                                      shape: RoundedRectangleBorder(
-                                          side: const BorderSide(
-                                              color: textfieldColor),
-                                          borderRadius:
-                                              BorderRadius.circular(25.r)),
-                                      onSelected: (t) {
-                                        bloc.changeSelectedRate(index);
-                                        bloc.getFiltersMap('rate', index);
-                                      },
-                                      selectedColor: mainColor,
-                                      label: SizedBox(
-                                        width: 60,
-                                        height: 35,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Image.asset(star),
-                                            Text("$index "),
-                                          ],
-                                        ),
-                                      ),
-                                      selected: bloc.selectedRate == index
-                                          ? true
-                                          : false,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
-                    Space(
-                      boxHeight: 20.h,
-                    ),
-                    type != 'course'
-                        ? Container()
-                        : ExpansionTile(
-                            title: Text(
-                              tr("explanation_type"),
-                              style:
-                                  TextStyles.agreeStyle.copyWith(color: black),
-                            ),
-                            children: [
-                              Wrap(
-                                children: List.generate(
-                                  bloc.statusList.length,
-                                  (index) => Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 2.h, horizontal: 3.w),
-                                    child: ChoiceChip(
-                                      backgroundColor: white,
-                                      shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            color: textfieldColor),
-                                        borderRadius:
-                                            BorderRadius.circular(25.r),
-                                      ),
-                                      onSelected: (t) {
-                                        bloc.changeSelectedStatus(index);
-                                        bloc.getFiltersMap('type', index + 1);
-                                      },
-                                      selectedColor: mainColor,
-                                      label: Text(
-                                        bloc.statusList[index],
-                                        style:
-                                            TextStyles.unselectedStyle.copyWith(
-                                          color: bloc.status == index
-                                              ? white
-                                              : grey,
-                                        ),
-                                      ),
-                                      selected:
-                                          bloc.status == index ? true : false,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                    Space(
-                      boxHeight: 20.h,
-                    ),
-                    ExpansionTile(
-                      title: Text(
-                        tr("price"),
-                        style: TextStyles.agreeStyle.copyWith(color: black),
+                        ],
                       ),
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tr("from"),
-                                    style: TextStyles.agreeStyle,
+                Space(
+                  boxHeight: 20.h,
+                ),
+                type != 'course'
+                    ? Container()
+                    : ExpansionTile(
+                        title: Text(
+                          tr("rate"),
+                          style: TextStyles.agreeStyle.copyWith(color: black),
+                        ),
+                        children: [
+                          Wrap(
+                            children: List.generate(
+                              5,
+                              (index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.h, horizontal: 3.w),
+                                child: ChoiceChip(
+                                  backgroundColor: white,
+                                  shape: RoundedRectangleBorder(
+                                      side: const BorderSide(
+                                          color: textfieldColor),
+                                      borderRadius:
+                                          BorderRadius.circular(25.r)),
+                                  onSelected: (t) {
+                                    bloc.changeSelectedRate(index);
+                                    bloc.getFiltersMap('rate', index);
+                                  },
+                                  selectedColor: mainColor,
+                                  label: SizedBox(
+                                    width: 60,
+                                    height: 35,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.asset(star),
+                                        Text("$index "),
+                                      ],
+                                    ),
                                   ),
-                                  MasterTextField(
-                                    controller: bloc.minPrice,
-                                    hintText: "",
-                                    fieldHeight: 50,
-                                    keyboardType: TextInputType.number,
-                                  )
-                                ],
+                                  selected:
+                                      bloc.selectedRate == index ? true : false,
+                                ),
                               ),
                             ),
-                            Space(
-                              boxWidth: 10.w,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    tr("to"),
-                                    style: TextStyles.agreeStyle,
+                          ),
+                        ],
+                      ),
+                Space(
+                  boxHeight: 20.h,
+                ),
+                type != 'course'
+                    ? Container()
+                    : ExpansionTile(
+                        title: Text(
+                          tr("explanation_type"),
+                          style: TextStyles.agreeStyle.copyWith(color: black),
+                        ),
+                        children: [
+                          Wrap(
+                            children: List.generate(
+                              bloc.statusList.length,
+                              (index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.h, horizontal: 3.w),
+                                child: ChoiceChip(
+                                  backgroundColor: white,
+                                  shape: RoundedRectangleBorder(
+                                    side:
+                                        const BorderSide(color: textfieldColor),
+                                    borderRadius: BorderRadius.circular(25.r),
                                   ),
-                                  MasterTextField(
-                                    controller: bloc.maxPrice,
-                                    hintText: "",
-                                    fieldHeight: 50,
-                                    keyboardType: TextInputType.number,
+                                  onSelected: (t) {
+                                    bloc.changeSelectedStatus(index);
+                                    bloc.getFiltersMap('type', index + 1);
+                                  },
+                                  selectedColor: mainColor,
+                                  label: Text(
+                                    bloc.statusList[index],
+                                    style: TextStyles.unselectedStyle.copyWith(
+                                      color:
+                                          bloc.status == index ? white : grey,
+                                    ),
                                   ),
-                                ],
+                                  selected: bloc.status == index ? true : false,
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                        // Space(
-                        //   boxHeight: 20.h,
-                        // ),
-                        // const SliderContainer(),
-                        Space(
-                          boxHeight: 20.h,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
+                          ),
+                        ],
+                      ),
+                Space(
+                  boxHeight: 20.h,
+                ),
+                ExpansionTile(
+                  title: Text(
+                    tr("price"),
+                    style: TextStyles.agreeStyle.copyWith(color: black),
+                  ),
+                  children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: MasterButton(
-                              onPressed: () {
-                                type == "course"
-                                    ? bloc.getFilteredCourses(title, id)
-                                    : bloc.getFilteredLessons(
-                                        title, yearId, id);
-                              },
-                              buttonColor: mainColor,
-                              buttonText: tr("filter")),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tr("from"),
+                                style: TextStyles.agreeStyle,
+                              ),
+                              MasterTextField(
+                                controller: bloc.minPrice,
+                                hintText: "",
+                                fieldHeight: 50,
+                                keyboardType: TextInputType.number,
+                              )
+                            ],
+                          ),
                         ),
                         Space(
                           boxWidth: 10.w,
                         ),
                         Expanded(
-                          child: MasterButton(
-                            buttonColor: profileColor,
-                            borderColor: profileColor,
-                            onPressed: () {
-                              // bloc.clearFilter(type == "course" ? true : false,
-                              //     yearId, id, title);
-                              bloc.minPrice.clear();
-                              bloc.maxPrice.clear();
-                            },
-                            buttonText: tr("clear_filter"),
-                            buttonStyle: TextStyles.appBarStyle
-                                .copyWith(color: mainColor),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tr("to"),
+                                style: TextStyles.agreeStyle,
+                              ),
+                              MasterTextField(
+                                controller: bloc.maxPrice,
+                                hintText: "",
+                                fieldHeight: 50,
+                                keyboardType: TextInputType.number,
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
+                    // Space(
+                    //   boxHeight: 20.h,
+                    // ),
+                    // const SliderContainer(),
                     Space(
                       boxHeight: 20.h,
                     ),
                   ],
                 ),
-              );
-            }));
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: MasterButton(
+                          onPressed: () {
+                            type == "course"
+                                ? bloc.getFilteredCourses(title, id)
+                                : bloc.getFilteredLessons(
+                                    title,
+                                    yearId,
+                                    id,
+                                  );
+                          },
+                          buttonColor: mainColor,
+                          buttonText: tr("filter")),
+                    ),
+                    Space(
+                      boxWidth: 10.w,
+                    ),
+                    Expanded(
+                      child: MasterButton(
+                        buttonColor: profileColor,
+                        borderColor: profileColor,
+                        onPressed: () {
+                          // bloc.clearFilter(type == "course" ? true : false,
+                          //     yearId, id, title);
+                          bloc.minPrice.clear();
+                          bloc.maxPrice.clear();
+                        },
+                        buttonText: tr("clear_filter"),
+                        buttonStyle:
+                            TextStyles.appBarStyle.copyWith(color: mainColor),
+                      ),
+                    ),
+                  ],
+                ),
+                Space(
+                  boxHeight: 20.h,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }
