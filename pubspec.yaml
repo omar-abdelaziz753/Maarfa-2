@@ -72,6 +72,8 @@ dependencies:
   url_launcher: ^6.1.6
   share_plus: ^10.1.4
   carousel_slider: ^5.0.0
+  pdf: ^3.10.4
+  path_provider: ^2.1.1
   # wakelock: ^0.6.2
 #  iconsax_flutter: ^1.0.0
 

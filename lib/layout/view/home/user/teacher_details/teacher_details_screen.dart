@@ -200,8 +200,8 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
             SliverToBoxAdapter(child: _buildTeacherInfo(teacher)),
             SliverToBoxAdapter(child: _buildStatsSection(teacher)),
             SliverToBoxAdapter(child: _buildAboutSection(teacher)),
-            SliverToBoxAdapter(child: _buildLessonsSection(teacher)),
             SliverToBoxAdapter(child: _buildEducationSection(teacher)),
+            SliverToBoxAdapter(child: _buildLessonsSection(teacher)),
             SliverToBoxAdapter(child: SizedBox(height: 100.h)),
           ],
         ),
@@ -233,22 +233,22 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      actions: [
-        Container(
-          margin: EdgeInsets.all(8.w),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.description_outlined,
-                color: Colors.white, size: 20.w),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-            },
-          ),
-        ),
-      ],
+      // actions: [
+      //   Container(
+      //     margin: EdgeInsets.all(8.w),
+      //     decoration: BoxDecoration(
+      //       color: Colors.black.withValues(alpha: 0.3),
+      //       borderRadius: BorderRadius.circular(12.r),
+      //     ),
+      //     child: IconButton(
+      //       icon: Icon(Icons.description_outlined,
+      //           color: Colors.white, size: 20.w),
+      //       onPressed: () {
+      //         HapticFeedback.lightImpact();
+      //       },
+      //     ),
+      //   ),
+      // ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
@@ -393,11 +393,11 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                 teacher.provider?.degree ?? 'no_qualification'.tr()),
             SizedBox(height: 12.h),
           ],
-          if (teacher.provider?.phone != null) ...[
-            _buildInfoRow(Icons.phone_outlined, 'phoneNumber'.tr(),
-                teacher.provider?.phone ?? 'no_phone_number'.tr()),
-            SizedBox(height: 12.h),
-          ],
+          // if (teacher.provider?.phone != null) ...[
+          //   _buildInfoRow(Icons.phone_outlined, 'phoneNumber'.tr(),
+          //       teacher.provider?.phone ?? 'no_phone_number'.tr()),
+          //   SizedBox(height: 12.h),
+          // ],
           if (teacher.provider?.email != null) ...[
             _buildInfoRow(Icons.email_outlined, 'emailAddress'.tr(),
                 teacher.provider?.email ?? 'no_email'.tr()),
@@ -1539,7 +1539,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
 
                         final selectedLessonObj = getSelectedLesson(lessons);
 
@@ -1948,6 +1948,22 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
     );
   }
 
+  String convertArabicToEnglishNumbers(String input) {
+    const arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    const english = ['0','1','2','3','4','5','6','7','8','9'];
+
+    for (int i = 0; i < arabic.length; i++) {
+      input = input.replaceAll(arabic[i], english[i]);
+    }
+    return input;
+  }
+
+  String formatDateToEnglish(String date) {
+    String englishDate = convertArabicToEnglishNumbers(date);
+    DateTime parsed = DateTime.parse(englishDate);
+    return "${parsed.year}-${parsed.month.toString().padLeft(2, '0')}-${parsed.day.toString().padLeft(2, '0')}";
+  }
+
   void _onBookNowPressed(TeacherDetailsData teacher) {
     HapticFeedback.mediumImpact();
 
@@ -1957,7 +1973,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
       (String date, String timeFrom, String timeTo, String type) {
         _handleBookingWithConsumer(
           teacher: teacher,
-          date: date,
+          date: formatDateToEnglish(date),
           timeFrom: timeFrom,
           timeTo: timeTo,
           type: type,
@@ -1981,17 +1997,17 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
       builder: (dialogContext) => BlocConsumer<Home2Cubit, Home2State>(
         listener: (context, state) {
           if (state is MakeBookSuccessState) {
-            Navigator.of(dialogContext).pop();
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Booking confirmed successfully!'),
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 2),
-              ),
-            );
-
-            Future.delayed(Duration(milliseconds: 500), () {});
+            // Navigator.of(dialogContext).pop();
+            //
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: Text('Booking confirmed successfully!'),
+            //     backgroundColor: Colors.green,
+            //     duration: Duration(seconds: 2),
+            //   ),
+            // );
+            //
+            // Future.delayed(Duration(milliseconds: 500), () {});
           } else if (state is MakeBookErrorState) {
             Navigator.of(dialogContext).pop();
 
@@ -2023,13 +2039,16 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
     final cubit = context.read<Home2Cubit>();
     cubit.makeBook(
       clientId: await prefService.getValue('user_id'),
-      date: date,
+      date: formatDateToEnglish(date),
       timeFrom: timeFrom,
       timeTo: timeTo,
       type: type,
       teacherId: teacher.provider!.id.toString(),
       context: context,
     );
+    print('-------------');
+    print(date);
+    print('-------------');
 
     // print("date is ======== $date");
     // print("timeFrom $timeFrom");

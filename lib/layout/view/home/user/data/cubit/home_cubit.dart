@@ -350,7 +350,8 @@ class Home2Cubit extends Cubit<Home2State> {
         emit(MakeBookErrorState(errorMessage: error));
       }, (data) {
         // Assuming the API returns success: true on successful booking
-        if (data['success'] == true) {
+        if (data['success'] == true || data['messages'] == "تم بنجاح") {
+          Navigator.pop(context);
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => MainScreen()),
@@ -363,8 +364,25 @@ class Home2Cubit extends Cubit<Home2State> {
             ),
           );
           emit(MakeBookSuccessState());
+        } else if (data['success'] == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  '${data['message']}' ?? 'Booking failed. Please try again.'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+          print('================${data['message']}');
+
+          emit(MakeBookErrorState(
+            errorMessage: data['message'] ?? 'Booking failed',
+          ));
         } else {
-          Navigator.of(context).pop();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => MainScreen()),
+              (route) => false);
 
           // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
@@ -381,6 +399,17 @@ class Home2Cubit extends Cubit<Home2State> {
         }
       });
     } catch (e) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+          (route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString() ?? 'Booking failed. Please try again.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
       emit(MakeBookErrorState(errorMessage: e.toString()));
     }
   }

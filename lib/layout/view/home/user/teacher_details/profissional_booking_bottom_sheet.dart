@@ -937,9 +937,14 @@ class _ProfessionalBookingBottomSheetState
     );
   }
 
-  String formatDate(String dateString) {
-    DateTime dateTime = DateTime.parse(dateString);
-    return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+  // String formatDate(String dateString) {
+  //   DateTime dateTime = DateTime.parse(dateString);
+  //   return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+  // }
+  String formatDate(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    String formattedDate = DateFormat('yyyy-MM-dd', 'en').format(dateTime);
+    return formattedDate;
   }
 
   void _parseSelectedTimeSlot() {
@@ -952,6 +957,19 @@ class _ProfessionalBookingBottomSheetState
     }
   }
 
+  // String _getEndTime(String startTime) {
+  //   final start = TimeOfDay(
+  //     hour: int.parse(startTime.split(':')[0]),
+  //     minute: int.parse(startTime.split(':')[1]),
+  //   );
+  //
+  //   final duration = _selectedType == 'lesson' ? 60 : 90;
+  //   final endMinutes = start.hour * 60 + start.minute + duration;
+  //   final endHour = (endMinutes ~/ 60) % 24;
+  //   final endMinute = endMinutes % 60;
+  //
+  //   return '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+  // }
   String _getEndTime(String startTime) {
     final start = TimeOfDay(
       hour: int.parse(startTime.split(':')[0]),
@@ -963,7 +981,16 @@ class _ProfessionalBookingBottomSheetState
     final endHour = (endMinutes ~/ 60) % 24;
     final endMinute = endMinutes % 60;
 
-    return '${endHour.toString().padLeft(2, '0')}:${endMinute.toString().padLeft(2, '0')}';
+    final now = DateTime.now();
+    final endDateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      endHour,
+      endMinute,
+    );
+
+    return DateFormat('hh:mm', 'en_US').format(endDateTime); // e.g., 02:30 PM
   }
 
   void _confirmBooking() {
