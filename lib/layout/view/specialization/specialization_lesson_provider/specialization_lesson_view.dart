@@ -96,7 +96,9 @@ class _SpecializationViewState extends State<SpecializationView> {
                 children: [
                   ContentDropDown(
                     isExpanded: true,
-                    value: widget.subjectValue,
+                    value: bloc.subjectModel.contains(widget.subjectValue)
+                        ? widget.subjectValue
+                        : null,
                     onChange: widget.subjectTap,
                     items: bloc.subjectModel
                         .map<DropdownMenuItem<SubjectModel>>(

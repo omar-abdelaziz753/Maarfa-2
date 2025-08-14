@@ -110,17 +110,40 @@ class _GradViewState extends State<GradView> {
 
   @override
   Widget build(BuildContext context) {
-    // print(widget.lessonData);
-    final minPrice = int.tryParse(widget.lessonData
-                .firstWhere((e) => e.key == "individual_price_min")
-                .value ??
-            "0") ??
-        0;
-    final maxPrice = int.tryParse(widget.lessonData
-                .firstWhere((e) => e.key == "individual_price_max")
-                .value ??
-            "0") ??
-        0;
+    // // print(widget.lessonData);
+    // final minPrice = int.tryParse(widget.lessonData
+    //             .firstWhere((e) => e.key == "individual_price_min")
+    //             .value ??
+    //         "0") ??
+    //     0;
+    // final maxPrice = int.tryParse(widget.lessonData
+    //             .firstWhere((e) => e.key == "individual_price_max")
+    //             .value ??
+    //         "0") ??
+    //     0;
+
+    // final minPrice = int.tryParse(
+    //       widget.lessonData
+    //               .firstWhere(
+    //                 (e) => e.key == "individual_price_min",
+    //                 orElse: () => LessonData(
+    //                     key: '', value: ''), // Provide a default value
+    //               )
+    //               .value ??
+    //           "0",
+    //     ) ??
+    //     0;
+
+    // final maxPrice = int.tryParse(
+    //       widget.lessonData
+    //               .firstWhere(
+    //                 (e) => e.key == "individual_price_max",
+    //                 orElse: () => LessonData(key: '', value: ''),
+    //               )
+    //               .value ??
+    //           "0",
+    //     ) ??
+    //     0;
     return BlocConsumer<ContentCubit, ContentState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -209,19 +232,21 @@ class _GradViewState extends State<GradView> {
                   errorText: bloc.validators[3],
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(
-                        maxPrice.toString().length),
+                    // LengthLimitingTextInputFormatter(
+                    //     maxPrice.toString().length),
                   ],
                   onChanged: (val) {
-                    final inputVal = int.tryParse(val) ?? 0;
-                    if (val.isEmpty) {
-                      bloc.validators[3] = null;
-                    } else if (inputVal < minPrice || inputVal > maxPrice) {
-                      bloc.validators[3] =
-                          "${tr("hourly_price_between")} $minPrice - $maxPrice ${tr("sar")}";
-                    } else {
-                      bloc.validators[3] = null;
-                    }
+                    // final inputVal = int.tryParse(val) ?? 0;
+
+                    
+                    // if (val.isEmpty) {
+                    //   bloc.validators[3] = null;
+                    // } else if (inputVal < minPrice || inputVal > maxPrice) {
+                    //   bloc.validators[3] =
+                    //       "${tr("hourly_price_between")} $minPrice - $maxPrice ${tr("sar")}";
+                    // } else {
+                    //   bloc.validators[3] = null;
+                    // }
                     setState(() {});
                   },
                   suffixIcon: "sar",

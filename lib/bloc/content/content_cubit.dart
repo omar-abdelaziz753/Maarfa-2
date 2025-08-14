@@ -290,8 +290,6 @@ class ContentCubit extends Cubit<ContentState> {
       endTime = use24Hour
           ? endTimeOfDay.format(Get.context!)
           : "${endTimeOfDay.hour.toString().padLeft(2, '0')}:${endTimeOfDay.minute.toString().padLeft(2, '0')}";
-
-    
     }
 
     emit(ChooseStartTimeState());
@@ -666,6 +664,9 @@ class ContentCubit extends Cubit<ContentState> {
           "name": name.text.trim(),
           "type": typeValue,
           "location": "$lat, $lng",
+          "educational_stage_id": gradeId,
+          "educational_year_id": yearId,
+          "subject_id": subjectId,
           "specialization_id": specializationId,
           "content": description.text.trim(),
           "number_of_hours": hours.text.trim(),

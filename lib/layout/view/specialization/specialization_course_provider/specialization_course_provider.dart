@@ -4,7 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:my_academy/bloc/educational_stages_years/educational_stages_cubit.dart';
+import 'package:my_academy/layout/view/specialization/specialization_lesson_provider/specialization_lesson_view.dart';
+import 'package:my_academy/layout/view/years/years_lesson_provider/years_lesson_view.dart';
+import 'package:my_academy/model/common/educational_stages/educational_stages_model.dart';
+import 'package:my_academy/model/common/lessons/lesson_model.dart';
 import 'package:my_academy/model/common/specializations/lessions_model.dart';
+import 'package:my_academy/repository/common/educational_stages/educational_stages_repository.dart';
 
 import '../../../../bloc/content/content_cubit.dart';
 import '../../../../bloc/specialzation/specialization_cubit.dart';
@@ -40,10 +46,25 @@ class SpecializationCourseView extends StatelessWidget {
             builder: (context, state) {
               if (state is SpecializationLoadedState) {
                 final specialization = (state).data;
-                return SpecializationView(
-                  specialization: specialization,
-                  courseDetailsModel: courseDetailsMode,
-                  lessonData: (state).lessonData,
+                return BlocProvider(
+                  create: (BuildContext context) =>
+                      EducationalStagesCubit(EducationalStagesRepository())
+                        ..getEducationalStages(),
+                  child: BlocBuilder<EducationalStagesCubit,
+                      EducationalStagesState>(
+                    builder: (context, state2) {
+                      if (state2 is EducationalStagesLoadedState) {
+                        final data = (state2).data;
+                        return SpecializationView(
+                          specialization: specialization,
+                          courseDetailsModel: courseDetailsMode,
+                          lessonData: (state).lessonData,
+                          data: data,
+                        );
+                      }
+                      return SizedBox();
+                    },
+                  ),
                 );
               } else if (state is SpecializationErrorState) {
                 return const ErrorPage();
@@ -60,10 +81,14 @@ class SpecializationView extends StatefulWidget {
     this.courseDetailsModel,
     required this.specialization,
     required this.lessonData,
+    required this.data,
+    this.lesson,
   });
   final CourseDetailsModel? courseDetailsModel;
   final List<Specialization> specialization;
   final List<LessonData> lessonData;
+  final List<EducationalStageModel> data;
+  final LessonDetails? lesson;
   @override
   State<SpecializationView> createState() => _SpecializationViewState();
 }
@@ -94,16 +119,38 @@ class _SpecializationViewState extends State<SpecializationView> {
   @override
   Widget build(BuildContext context) {
     // print(widget.lessonData);
-    final minPrice = int.tryParse(widget.lessonData
-                .firstWhere((e) => e.key == "individual_price_min")
-                .value ??
-            "0") ??
-        0;
-    final maxPrice = int.tryParse(widget.lessonData
-                .firstWhere((e) => e.key == "individual_price_max")
-                .value ??
-            "0") ??
-        0;
+    // final minPrice = int.tryParse(widget.lessonData
+    //             .firstWhere((e) => e.key == "individual_price_min")
+    //             .value ??
+    //         "0" ) ??
+    //     0;
+    // final maxPrice = int.tryParse(widget.lessonData
+    //             .firstWhere((e) => e.key == "individual_price_max")
+    //             .value ??
+    //         "0") ??
+    //     0;
+    // final minPrice = int.tryParse(
+    //       widget.lessonData
+    //               .firstWhere(
+    //                 (e) => e.key == "individual_price_min",
+    //                 orElse: () => LessonData(
+    //                     key: '', value: ''), // Provide a default value
+    //               )
+    //               .value ??
+    //           "0",
+    //     ) ??
+    //     0;
+
+    // final maxPrice = int.tryParse(
+    //       widget.lessonData
+    //               .firstWhere(
+    //                 (e) => e.key == "individual_price_max",
+    //                 orElse: () => LessonData(key: '', value: ''),
+    //               )
+    //               .value ??
+    //           "0",
+    //     ) ??
+    //     0;
 
     return BlocConsumer<ContentCubit, ContentState>(
       listener: (context, state) {},
@@ -145,6 +192,62 @@ class _SpecializationViewState extends State<SpecializationView> {
               const Space(
                 boxHeight: 15,
               ),
+              Container(
+                height: 70.h,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: textfieldColor,
+                      width: 1.w,
+                    ),
+                    borderRadius: BorderRadius.circular(5.r)),
+                child: DropdownButton<EducationalStageModel>(
+                  isExpanded: true,
+                  elevation: 0,
+                  hint: SidePadding(
+                    sidePadding: 15,
+                    child: Text(
+                      tr("grades"),
+                      style: TextStyles.appBarStyle.copyWith(color: mainColor),
+                    ),
+                  ),
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: profileIconCardColor,
+                    size: 40.h,
+                  ),
+                  dropdownColor: white,
+                  style: TextStyles.appBarStyle.copyWith(color: mainColor),
+                  borderRadius: BorderRadius.circular(4.r),
+                  value: widget.data.contains(bloc.grade) ? bloc.grade : null,
+                  onChanged: (val) => bloc.chooseGrade(val),
+                  items: widget.data
+                      .map<DropdownMenuItem<EducationalStageModel>>(
+                          (EducationalStageModel value) {
+                    return DropdownMenuItem<EducationalStageModel>(
+                        value: value,
+                        child: Center(
+                            child: Text("${value.name}",
+                                style: TextStyles.appBarStyle
+                                    .copyWith(color: mainColor))));
+                  }).toList(),
+                ),
+              ),
+              const Space(
+                boxHeight: 15,
+              ),
+              if (bloc.gradeId != null)
+                YearsLessonView(
+                  id: bloc.gradeId!,
+                  yearValue: bloc.year,
+                  yearTap: (val) => bloc.chooseYear(val),
+                ),
+              if (bloc.yearId != null)
+                SpecializationLessonView(
+                  id: bloc.yearId!,
+                  isEdit: widget.lesson != null,
+                  subjectValue: bloc.subject,
+                  subjectTap: (val) => bloc.chooseSubject(val),
+                ),
               bloc.typeValue == 1
                   ? MasterTextField(
                       onTap: () {
@@ -298,29 +401,33 @@ class _SpecializationViewState extends State<SpecializationView> {
               ),
               MasterTextField(
                 controller: bloc.price,
-                hintText: bloc.systemValue == 1
-                    ? "${tr("course_price_between")} $minPrice - $maxPrice "
-                    : tr("course_price"),
+                hintText:
+                    //  bloc.systemValue == 1
+                    //     ? "${tr("course_price_between")} $minPrice - $ "
+                    //     :
+                    tr("course_price"),
                 keyboardType: TextInputType.number,
                 errorText: bloc.validators[3],
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(maxPrice.toString().length),
+                  // LengthLimitingTextInputFormatter(maxPrice.toString().length),
                 ],
                 onChanged: (val) {
                   final inputVal = int.tryParse(val) ?? 0;
                   if (val.isEmpty) {
                     bloc.validators[3] = null;
-                  } else if (inputVal < minPrice || inputVal > maxPrice) {
-                    bloc.validators[3] =
-                        "${tr("course_price_between")} $minPrice - $maxPrice ${tr("sar")}";
-                  } else {
+                  }
+                  // else if (inputVal < minPrice || inputVal > maxPrice) {
+                  //   bloc.validators[3] =
+                  //       "${tr("course_price_between")} $minPrice - $maxPrice ${tr("sar")}";
+                  // }
+                  else {
                     bloc.validators[3] = null;
                   }
                   setState(() {});
                 },
                 suffixIcon: "sar",
-                readOnly: bloc.systemValue != 1,
+                // readOnly: bloc.systemValue != 1,
               ),
               const Space(
                 boxHeight: 20,
