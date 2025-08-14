@@ -9,23 +9,23 @@ import 'package:my_academy/widget/app_bar/default_app_bar/default_app_bar.dart';
 import 'package:my_academy/widget/buttons/master/master_button.dart';
 import 'package:my_academy/widget/side_padding/side_padding.dart';
 import 'package:my_academy/widget/space/space.dart';
-
 import '../../../../model/provider/home/home_db_response.dart';
 import '../../../../res/drawable/icon/icons.dart';
 import '../../../../res/value/color/color.dart';
 import '../../../../widget/alert/alert_rate.dart';
 
 class SubjectDetails extends StatelessWidget {
-  const SubjectDetails(
-      {super.key,
-      this.hourPrice,
-      this.hours,
-      required this.providerId,
-      required this.providerName,
-      required this.subjectTitle,
-      required this.isFinshed,
-      required this.subjectYear,
-      this.times});
+  const SubjectDetails({
+    super.key,
+    this.hourPrice,
+    this.hours,
+    required this.providerId,
+    required this.providerName,
+    required this.subjectTitle,
+    required this.isFinshed,
+    required this.subjectYear,
+    this.times,
+  });
 
   final int providerId;
   final String subjectTitle;

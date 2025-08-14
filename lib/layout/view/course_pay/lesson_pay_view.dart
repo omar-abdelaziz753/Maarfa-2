@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_academy/widget/request_lesson/bloc/request_lesson_cubit.dart';
 
 import '../../../bloc/pay/pay_cubit.dart';
 import '../../../model/pay/pay_response.dart';
@@ -25,6 +26,7 @@ class LessonPayView extends StatelessWidget {
   final int id;
   final List<PaymentMethodModel>? paymentMethod;
   final bool isRequest;
+
   const LessonPayView({
     super.key,
     required this.id,
@@ -35,22 +37,22 @@ class LessonPayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (BuildContext context) => PayCubit()..getPay(id),
-        child: BlocConsumer<PayCubit, PayState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              return BlocBuilder<PayCubit, PayState>(builder: (context, state) {
-                if (state is PayLoadedState) {
-                  // print("a77777");
-                  final data = (state).data;
-                  return coursePayView(context, data);
-                } else if (state is PayErrorState) {
-                  return const ErrorPage();
-                } else {
-                  return const Loading();
-                }
-              });
-            }));
+          create: (BuildContext context) => PayCubit()..getPay(id),
+          child: BlocConsumer<PayCubit, PayState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return BlocBuilder<PayCubit, PayState>(builder: (context, state) {
+                  if (state is PayLoadedState) {
+                    // print("a77777");
+                    final data = (state).data;
+                    return coursePayView(context, data);
+                  } else if (state is PayErrorState) {
+                    return const ErrorPage();
+                  } else {
+                    return const Loading();
+                  }
+                });
+              }));
   }
 
   coursePayView(context, PayModel data) {
@@ -58,6 +60,8 @@ class LessonPayView extends StatelessWidget {
     //         double.parse(data.course.numberOfHours!.toString()))
     //     .toString();
     return BlocProvider(
+  create: (context) => PayCubit(),
+  child: BlocProvider(
         create: (BuildContext context) => PayCubit(),
         child: BlocConsumer<PayCubit, PayState>(
             listener: (context, state) {},
@@ -68,6 +72,7 @@ class LessonPayView extends StatelessWidget {
                 child: ListView(
                   children: [
                     RequestLessonDetailsCard(lessonDetails: data.lesson),
+
                     const Space(
                       boxHeight: 20,
                     ),
@@ -219,16 +224,30 @@ class LessonPayView extends StatelessWidget {
                     ),
                     data.status != 2
                         ? const SizedBox()
-                        : MasterLoadButton(
-                            buttonController: bloc.payController,
-                            buttonText:
-                                "${tr("pay")} (${data.lesson!.finalPriceWithTax} ${tr("sar")})",
-                            onPressed: () {
-                              bloc.pay(id: id, context: context);
-                              // , wallet: false);
-                              // Get.to(const BookingStatus());
-                            },
-                          ),
+                        : BlocBuilder<PayCubit,
+                        PayState>(
+                          builder: (context, state) {
+                            final cubit =
+                                context.read<PayCubit>();
+
+                            final priceText = state is MakeCouponSuccessState
+                                ? bloc.finalP.toString()
+                                : data.lesson!.finalPriceWithTax!;
+
+                            print('--------');
+                            print(state is MakeCouponSuccessState);
+                            print(priceText);
+                            print('--------');
+
+                            return MasterLoadButton(
+                                buttonController: bloc.payController,
+                                buttonText: "${tr("pay")} ($priceText ${tr("sar")})",
+                                onPressed: () {
+                                  bloc.pay(id: id, context: context, coupon: bloc.couponT!);
+                                },
+                            );
+                          },
+                        ),
                     const Space(
                       boxHeight: 20,
                     ),
@@ -256,6 +275,7 @@ class LessonPayView extends StatelessWidget {
                   ],
                 ),
               );
-            }));
+            })),
+);
   }
 }

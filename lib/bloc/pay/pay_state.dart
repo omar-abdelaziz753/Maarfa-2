@@ -34,3 +34,13 @@ class SetPaymentMethod extends PayState {}
 class CourseCancelState extends PayState {}
 
 class LessonCancelState extends PayState {}
+
+
+final class MakeCouponLoadingState extends PayState {}
+
+final class MakeCouponSuccessState extends PayState {
+  final CouponResponseDataModel couponResponseDataModel;
+  MakeCouponSuccessState({required this.couponResponseDataModel});
+}
+
+final class MakeCouponErrorState extends PayState {}

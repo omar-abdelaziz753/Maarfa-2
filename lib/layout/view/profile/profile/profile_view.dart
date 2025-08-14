@@ -120,7 +120,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       const Icon(Icons.person_3_outlined),
                                   imageUrl: widget.isUser
                                       ? data.data?.image ?? data.data?.imagePath
-                                      : data.data?.imagePath ?? "",
+                                      : data?.data?.imagePath ?? "",
                                   imageBuilder: (context, imageProvider) =>
                                       Container(
                                     height: 40,
@@ -164,10 +164,10 @@ class _ProfileViewState extends State<ProfileView> {
                                     ))
                                 : Get.to(
                                     () => BankAccount(
-                                      balance: data.data.wallet,
-                                      deservedAmount: data.data.expectedAmount,
-                                      appRatio: data.data.appRatio,
-                                      bankData: data.data.bankAccount,
+                                      balance: data?.data.wallet,
+                                      deservedAmount: data?.data.expectedAmount,
+                                      appRatio: data?.data.appRatio,
+                                      bankData: data?.data.bankAccount,
                                     ),
                                   );
                             // Get.to(const WalletCharging());

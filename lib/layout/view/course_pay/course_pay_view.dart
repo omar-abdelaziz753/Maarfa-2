@@ -215,7 +215,7 @@ class CoursePayView extends StatelessWidget {
                             buttonText:
                                 "${tr("pay")} (${data.course.priceWithTax} ${tr("sar")})",
                             onPressed: () {
-                              bloc.pay(id: id, context: context);
+                              bloc.pay(id: id, context: context, coupon: bloc.couponT!);
                               // , wallet: false);
                               // Get.to(const BookingStatus());
                             },
