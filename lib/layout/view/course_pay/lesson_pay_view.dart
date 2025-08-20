@@ -250,7 +250,7 @@ class _LessonPayViewState extends State<LessonPayView> {
                                 buttonController: bloc.payController,
                                 buttonText: "${tr("pay")} ($priceText ${tr("sar")})t",
                                 onPressed: () {
-                                  bloc.pay(id: widget.id, context: context, coupon: bloc.couponT!);
+                                  bloc.pay(id: widget.id, context: context, coupon: bloc.couponT ?? '');
                                 },
                             );
                           },
