@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_academy/layout/activity/provider_screens/main/main_screen.dart';
+import 'package:my_academy/layout/activity/user_screens/main/main_screen.dart';
+import 'package:my_academy/model/guest/guest_data_model.dart';
+import 'package:my_academy/service/network/dio/dio_service.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
@@ -387,6 +392,56 @@ class AuthUserCubit extends Cubit<AuthState> {
     }
     emit(LoginState());
   }
+
+
+  // Future<void> guestLogin(bool isUser, BuildContext context) async {
+  //   emit(GuestLoadingState());
+  //
+  //   try {
+  //     // Use DioService to make the POST request
+  //     final response = await DioService().post(
+  //       '/check-guest', // Replace with the actual API endpoint path
+  //     );
+  //
+  //     // Handle the response using Either from dartz
+  //     return response.fold(
+  //       (failure) {
+  //         // Failure case
+  //         emit(GuestErrorState(failure.toString()));
+  //       },
+  //       (data) {
+  //         // Success case
+  //         guestData = GuestDataModel.fromJson(data);
+  //
+  //         if (guestData.status == true && guestData.data?.guestToken != null) {
+  //           // Save guest token to shared preferences
+  //           SharedPreferences.getInstance().then((prefs) {
+  //             prefs.setString('guest_token', guestData.data!.guestToken!);
+  //           });
+  //
+  //           isUser
+  //               ? Get.to(() => MainScreen())
+  //               : Get.to(() => ProviderMainScreen());
+  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.green,
+  //             content: Text(guestData.message ?? 'Login as guest successful'),
+  //           ));
+  //
+  //           emit(GuestSuccessState());
+  //         } else {
+  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.red,
+  //             content: Text(guestData.message ?? 'Failed to login as guest'),
+  //           ));
+  //           emit(GuestErrorState(
+  //               guestData.message ?? 'Failed to login as guest'));
+  //         }
+  //       },
+  //     );
+  //   } catch (e) {
+  //     emit(GuestErrorState('An unexpected error occurred: $e'));
+  //   }
+  // }
 
   void validateEmail() async {
     if (firstName.text.isEmpty ||

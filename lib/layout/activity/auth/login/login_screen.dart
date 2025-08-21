@@ -1,8 +1,14 @@
+import 'package:dartz/dartz.dart' show Either;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:my_academy/bloc/bottom_bar/bottom_bar_cubit.dart';
+import 'package:my_academy/failure.dart';
 import 'package:my_academy/layout/activity/auth/login/google_login_button.dart';
+import 'package:my_academy/layout/activity/provider_screens/main/main_screen.dart';
+import 'package:my_academy/layout/activity/user_screens/main/main_screen.dart';
+import 'package:my_academy/service/local/share_prefs_service.dart';
 
 import '../../../../bloc/auth/user/auth_cubit.dart';
 import '../../../../repository/user/auth_user/auth_user_repository.dart';
@@ -49,10 +55,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SharedPrefService pref = SharedPrefService();
+    final isGuest = pref.getBool('isGuest');
+    print('--------');
+    print(isGuest.toString());
+    print('--------');
+
     return BlocProvider(
         create: (BuildContext context) => AuthUserCubit(AuthUserRepository()),
         child: BlocConsumer<AuthUserCubit, AuthState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+
+            },
             builder: (context, state) {
               final bloc = AuthUserCubit.get(context);
               return Scaffold(
@@ -138,26 +152,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Space(
                       boxHeight: 25,
                     ),
-                    /// Google Button Login
-                    GoogleLoginButton(
-                      onPressed: () async {
-                        toggleGoogleLoading();
-                        try {
-                          // Add your Google login logic here
-                          // Example: await bloc.signInWithGoogle();
-                          print("Google login pressed");
-                        } catch (e) {
-                          print("Google login error: $e");
-                        } finally {
-                          toggleGoogleLoading();
-                        }
-                      },
-                      isLoading: isGoogleLoading,
-                      sidePadding: 15,
-                    ),
-                    const Space(
-                      boxHeight: 25,
-                    ),
+                    // /// Google Button Login
+                    // GoogleLoginButton(
+                    //   onPressed: () async {
+                    //     toggleGoogleLoading();
+                    //     try {
+                    //       // Add your Google login logic here
+                    //       // Example: await bloc.signInWithGoogle();
+                    //       print("Google login pressed");
+                    //     } catch (e) {
+                    //       print("Google login error: $e");
+                    //     } finally {
+                    //       toggleGoogleLoading();
+                    //     }
+                    //   },
+                    //   isLoading: isGoogleLoading,
+                    //   sidePadding: 15,
+                    // ),
+                    // const Space(
+                    //   boxHeight: 25,
+                    // ),
                     InkWell(
                       onTap: () => widget.isUser
                           ? Get.to(() => const RegisterScreen())
@@ -166,6 +180,87 @@ class _LoginScreenState extends State<LoginScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyles.appBarStyle
                               .copyWith(color: mainColor)),
+                    ),
+
+                    FutureBuilder<Either<Failure, bool>>(
+                      future: SharedPrefService().getBool('isGuest'),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          debugPrint('--------');
+                          debugPrint('Loading isGuest...');
+                          debugPrint('--------');
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError || !snapshot.hasData) {
+                          debugPrint('--------');
+                          debugPrint('Error or no data for isGuest');
+                          debugPrint('--------');
+                          return Container();
+                        }
+
+                        return snapshot.data!.fold(
+                              (failure) {
+                            debugPrint('--------');
+                            debugPrint('Failed to get isGuest: $failure');
+                            debugPrint('--------');
+                            return Container();
+                          },
+                              (isGuest) {
+                            debugPrint('--------');
+                            debugPrint('isGuest: $isGuest');
+                            debugPrint('--------');
+                            return isGuest
+                                ? const Space(
+                              boxHeight: 25,
+                            )
+                                : Container();
+                          },
+                        );
+                      },
+                    ),
+
+                    FutureBuilder<Either<Failure, bool>>(
+                      future: SharedPrefService().getBool('isGuest'),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          debugPrint('--------');
+                          debugPrint('Loading isGuest...');
+                          debugPrint('--------');
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError || !snapshot.hasData) {
+                          debugPrint('--------');
+                          debugPrint('Error or no data for isGuest');
+                          debugPrint('--------');
+                          return Container();
+                        }
+
+                        return snapshot.data!.fold(
+                              (failure) {
+                            debugPrint('--------');
+                            debugPrint('Failed to get isGuest: $failure');
+                            debugPrint('--------');
+                            return Container();
+                          },
+                              (isGuest) {
+                            debugPrint('--------');
+                            debugPrint('isGuest: $isGuest');
+                            debugPrint('--------');
+                            return isGuest
+                                ? InkWell(
+                              onTap: () {
+                                widget.isUser
+                                    ? Get.to(() => const MainScreen())
+                                    : Get.to(() => const ProviderMainScreen());
+                              },
+                              child: Text(
+                                tr("skip"),
+                                textAlign: TextAlign.center,
+                                style: TextStyles.appBarStyle.copyWith(color: darkGrey),
+                              ),
+                            )
+                                : Container();
+                          },
+                        );
+                      },
                     ),
                     const Space(
                       boxHeight: 40,

@@ -54,7 +54,7 @@ class ProfileCacheView extends StatelessWidget {
                 listener: (context, state) {},
                 builder: (context, state) {
                   if (state is ProviderLoadedState) {
-                    final data = state.data!;
+                    final data = state.data;
                     return profileView(context, data);
                   } else if (state is ErrorProviderState) {
                     return const ErrorPage();

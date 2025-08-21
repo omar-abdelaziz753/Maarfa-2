@@ -13,6 +13,8 @@ class ChangeConfirmState extends AuthState {}
 
 class LoginState extends AuthState {}
 
+
+
 class RegisterState extends AuthState {}
 
 class ValidateEmptyState extends AuthState {}

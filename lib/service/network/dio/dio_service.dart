@@ -394,3 +394,99 @@ class DioService {
     }
   }
 }
+
+class DioService2 {
+  static final DioService2 _dioService = DioService2._internal();
+  static dio.Dio? _dio;
+
+  factory DioService2() {
+    dio.BaseOptions options = dio.BaseOptions(
+        followRedirects: false,
+        validateStatus: (status) => true,
+        baseUrl: ApiUrl,
+        receiveDataWhenStatusError: true,
+        connectTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30));
+    _dio = dio.Dio(options);
+    _dio?.interceptors.add(PrettyDioLogger(
+      request: true,
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: true,
+      error: true,
+    ));
+    return _dioService;
+  }
+
+  DioService2._internal();
+
+  Future<Either<String, Map<String, dynamic>>> post(
+      String path, {
+        Map<String, dynamic>? body,
+        String? url,
+        Map<String, dynamic>? queryParams,
+      }) async {
+    debugPrint('new request in ${Get.locale?.languageCode} :$path');
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('token') ?? '0';
+    try {
+      body ??= {};
+      queryParams ??= {};
+      debugPrint(jsonEncode(body));
+      debugPrint('token $value');
+      final response = await _dio!.post(
+        path,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "Accept-Language": Get.locale?.languageCode,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": value == '0' ? null : 'Bearer $value',
+          },
+        ),
+        data: body,
+      );
+      debugPrint('response${json.encode(response.data)}');
+      debugPrint(response.statusCode.toString());
+
+      if (response.data["status"] == 401) {
+        debugPrint('response error 401');
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      }
+
+      if (200 <= response.statusCode! && response.statusCode! <= 299) {
+        if (response.data['status'] == true) { // Changed from 'success' to 'status'
+          prefs.setInt("notification", response.data['notificationsCount'] ?? 0);
+          return Right(response.data);
+        } else {
+          return Left(response.data["message"]?.toString() ?? tr("unknown_error"));
+        }
+      }
+    } on dio.DioException catch (e) {
+      debugPrint(e.response.toString());
+
+      if (e.response?.data["status"] == 401) {
+        debugPrint('response error 401');
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      } else if (e.type == dio.DioExceptionType.connectionTimeout ||
+          e.type == dio.DioExceptionType.receiveTimeout ||
+          e.type == dio.DioExceptionType.sendTimeout) {
+        return Left(tr("connection_timeout"));
+      } else if (e.error.runtimeType != SocketException) {
+        debugPrint("failed");
+        return Left(e.response?.data["message"]?.toString() ?? tr("unknown_error"));
+      } else {
+        return Left(tr("no_internet_connection"));
+      }
+    } on HandshakeException catch (e) {
+      debugPrint(e.toString());
+      return Left(tr("no_internet_connection_try_again"));
+    }
+    return Left(tr("unknown_error"));
+  }
+
+// ... (other methods like get, put, delete, requestWithFile, requestWithFiles remain unchanged)
+}
