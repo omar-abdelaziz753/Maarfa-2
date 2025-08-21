@@ -3,7 +3,8 @@ import 'dart:io';
 
 // ignore: constant_identifier_names
 // const String BASE_URL = "https://ma3rfa.backend.tanfeethi.tanfeethi.com.sa";
-const String BASE_URL = "https://newma3refabackend.tanfeethi.tanfeethi.com.sa";
+// const String BASE_URL = "https://newma3refabackend.tanfeethi.tanfeethi.com.sa";
+const String BASE_URL = "https://backend.maarefa.app";
 // "https://myacademy.moltaqadev.com";
 // "https://moazez-alta3lemy.com";
 // "https://myacademy.moltaqa-wo.net";
