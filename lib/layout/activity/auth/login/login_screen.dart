@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     SharedPrefService pref = SharedPrefService();
-    final isGuest = pref.getBool('isGuest');
+    // final isGuest = pref.getBool('isGuest');
     // print('--------');
     // print(isGuest.toString());
     // print('--------');
@@ -177,90 +177,90 @@ class _LoginScreenState extends State<LoginScreen> {
                               .copyWith(color: mainColor)),
                     ),
 
-                    FutureBuilder<Either<Failure, bool>>(
-                      future: SharedPrefService().getBool('isGuest'),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          debugPrint('--------');
-                          debugPrint('Loading isGuest...');
-                          debugPrint('--------');
-                          return CircularProgressIndicator();
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          debugPrint('--------');
-                          debugPrint('Error or no data for isGuest');
-                          debugPrint('--------');
-                          return Container();
-                        }
+                    // FutureBuilder<Either<Failure, bool>>(
+                    //   future: SharedPrefService().getBool('isGuest'),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       debugPrint('--------');
+                    //       debugPrint('Loading isGuest...');
+                    //       debugPrint('--------');
+                    //       return CircularProgressIndicator();
+                    //     } else if (snapshot.hasError || !snapshot.hasData) {
+                    //       debugPrint('--------');
+                    //       debugPrint('Error or no data for isGuest');
+                    //       debugPrint('--------');
+                    //       return Container();
+                    //     }
+                    //
+                    //     return snapshot.data!.fold(
+                    //       (failure) {
+                    //         debugPrint('--------');
+                    //         debugPrint('Failed to get isGuest: $failure');
+                    //         debugPrint('--------');
+                    //         return Container();
+                    //       },
+                    //       (isGuest) {
+                    //         debugPrint('--------');
+                    //         debugPrint('isGuest: $isGuest');
+                    //         debugPrint('--------');
+                    //         return isGuest
+                    //             ? const Space(
+                    //                 boxHeight: 25,
+                    //               )
+                    //             : Container();
+                    //       },
+                    //     );
+                    //   },
+                    // ),
 
-                        return snapshot.data!.fold(
-                          (failure) {
-                            debugPrint('--------');
-                            debugPrint('Failed to get isGuest: $failure');
-                            debugPrint('--------');
-                            return Container();
-                          },
-                          (isGuest) {
-                            debugPrint('--------');
-                            debugPrint('isGuest: $isGuest');
-                            debugPrint('--------');
-                            return isGuest
-                                ? const Space(
-                                    boxHeight: 25,
-                                  )
-                                : Container();
-                          },
-                        );
-                      },
-                    ),
-
-                    FutureBuilder<Either<Failure, bool>>(
-                      future: SharedPrefService().getBool('isGuest'),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          debugPrint('--------');
-                          debugPrint('Loading isGuest...');
-                          debugPrint('--------');
-                          return CircularProgressIndicator();
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          debugPrint('--------');
-                          debugPrint('Error or no data for isGuest');
-                          debugPrint('--------');
-                          return Container();
-                        }
-
-                        return snapshot.data!.fold(
-                          (failure) {
-                            debugPrint('--------');
-                            debugPrint('Failed to get isGuest: $failure');
-                            debugPrint('--------');
-                            return Container();
-                          },
-                          (isGuest) {
-                            debugPrint('--------');
-                            debugPrint('isGuest: $isGuest');
-                            debugPrint('--------');
-                            return isGuest
-                                ? InkWell(
-                                    onTap: () {
-                                      widget.isUser
-                                          ? Get.to(() => const MainScreen())
-                                          : Get.to(
-                                              () => const ProviderMainScreen());
-                                    },
-                                    child: Text(
-                                      tr("skip"),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.appBarStyle
-                                          .copyWith(color: darkGrey),
-                                    ),
-                                  )
-                                : Container();
-                          },
-                        );
-                      },
-                    ),
+                    // FutureBuilder<Either<Failure, bool>>(
+                    //   future: SharedPrefService().getBool('isGuest'),
+                    //   builder: (context, snapshot) {
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       debugPrint('--------');
+                    //       debugPrint('Loading isGuest...');
+                    //       debugPrint('--------');
+                    //       return CircularProgressIndicator();
+                    //     } else if (snapshot.hasError || !snapshot.hasData) {
+                    //       debugPrint('--------');
+                    //       debugPrint('Error or no data for isGuest');
+                    //       debugPrint('--------');
+                    //       return Container();
+                    //     }
+                    //
+                    //     return snapshot.data!.fold(
+                    //       (failure) {
+                    //         debugPrint('--------');
+                    //         debugPrint('Failed to get isGuest: $failure');
+                    //         debugPrint('--------');
+                    //         return Container();
+                    //       },
+                    //       (isGuest) {
+                    //         debugPrint('--------');
+                    //         debugPrint('isGuest: $isGuest');
+                    //         debugPrint('--------');
+                    //         return isGuest
+                    //             ? InkWell(
+                    //                 onTap: () {
+                    //                   widget.isUser
+                    //                       ? Get.to(() => const MainScreen())
+                    //                       : Get.to(
+                    //                           () => const ProviderMainScreen());
+                    //                 },
+                    //                 child: Text(
+                    //                   tr("skip"),
+                    //                   textAlign: TextAlign.center,
+                    //                   style: TextStyles.appBarStyle
+                    //                       .copyWith(color: darkGrey),
+                    //                 ),
+                    //               )
+                    //             : Container();
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     const Space(
                       boxHeight: 40,
                     ),

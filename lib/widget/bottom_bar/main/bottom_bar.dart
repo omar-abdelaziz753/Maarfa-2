@@ -84,11 +84,18 @@ class MasterBottomBar extends StatelessWidget {
           fontSize: 11.sp,
         ),
         items: [
-          CustomFloatingNavbarItem(icon: home, title: tr("home")),
-          CustomFloatingNavbarItem(icon: bookmark, title: tr("bookmark")),
-          CustomFloatingNavbarItem(icon: myRequests, title: tr("my_requests")),
-          CustomFloatingNavbarItem(icon: subscribe, title: tr("subscribe")),
-          CustomFloatingNavbarItem(icon: profile, title: tr("account")),
+          CustomFloatingNavbarItem(
+              icon: home, title: tr("home"), showTitleAlways: true),
+          CustomFloatingNavbarItem(
+              icon: bookmark, title: tr("bookmark"), showTitleAlways: true),
+          CustomFloatingNavbarItem(
+              icon: myRequests,
+              title: tr("my_requests"),
+              showTitleAlways: true),
+          CustomFloatingNavbarItem(
+              icon: subscribe, title: tr("subscribe"), showTitleAlways: true),
+          CustomFloatingNavbarItem(
+              icon: profile, title: tr("account"), showTitleAlways: true),
         ],
       ),
     );

@@ -593,8 +593,8 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
   Widget _buildLessonCard(Lesson lesson) {
     final nextTime = _formatLessonTime(lesson.nextTime);
     final priceText = lesson.hourPrice != null
-        ? '${lesson.hourPrice} ر.س/ساعة'
-        : 'السعر غير محدد';
+        ? '${lesson.hourPrice} ${'SAR/hour'.tr()}'
+        : 'pppp'.tr();
 
     final isSelected = _selectedLesson ==
         (lesson.id?.toString() ?? lesson.hashCode.toString());
@@ -1005,7 +1005,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
               ),
               const Spacer(),
               Text(
-                '${times.length} sessions',
+                '${times.length} ${'sessions'.tr()}',
                 style: TextStyle(
                   fontSize: 10.sp,
                   color: Colors.purple[700],
@@ -1044,7 +1044,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
           if (times.length > 2) ...[
             SizedBox(height: 4.h),
             Text(
-              '+${times.length - 2} more sessions',
+              '+${times.length - 2} ${'more sessions'.tr()}',
               style: TextStyle(
                 fontSize: 11.sp,
                 color: Colors.purple[600],
@@ -1286,7 +1286,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Text(
-                    '1 selected',
+                    '1 ${'selected'.tr()}',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: Colors.green[600],
@@ -1422,8 +1422,8 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                             SizedBox(width: 4.w),
                             Text(
                               _isSelectionMode
-                                  ? 'Selection Mode'
-                                  : 'Select Mode',
+                                  ? 'Selection Mode'.tr()
+                                  : 'Select Mode'.tr(),
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: _isSelectionMode
@@ -1477,7 +1477,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                           ),
                           SizedBox(width: 8.w),
                           Text(
-                            '1 lesson selected',
+                            '1 ${'lesson selected'.tr()}',
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.green[700],
@@ -1500,7 +1500,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                           minimumSize: Size.zero,
                         ),
                         child: Text(
-                          'Clear',
+                          'Clear'.tr(),
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.red[600],
@@ -1567,7 +1567,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                           Icon(Icons.check_circle, size: 20.w),
                           SizedBox(width: 8.w),
                           Text(
-                            'Book Selected Lesson',
+                            'Book Selected Lesson'.tr(),
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -1754,7 +1754,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
 
                                 if (lessonTimes.isEmpty) {
                                   showToast(
-                                      "This lesson has no available time slots");
+                                      "This lesson has no available time slots".tr());
                                   return;
                                 }
 
@@ -1794,10 +1794,10 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                           SizedBox(width: 8.w),
                           Text(
                             _selectedLesson != null
-                                ? 'Book Selected Lesson'
+                                ? 'Book Selected Lesson'.tr()
                                 : _isSelectionMode
-                                    ? 'Cancel Selection'
-                                    : 'Select Lesson',
+                                    ? 'Cancel Selection'.tr()
+                                    : 'Select Lesson'.tr(),
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -1855,7 +1855,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text('Select Time Slots'),
+          title: Text('Select Time Slots'.tr()),
           content: SizedBox(
             width: double.maxFinite,
             child: ListView.builder(
@@ -1906,7 +1906,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
                         );
                       }
                     : null,
-                child: Text('Book Lesson'),
+                child: Text('Book Lesson'.tr()),
               ),
             ),
           ],
@@ -2014,7 +2014,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                    state.errorMessage ?? 'Booking failed. Please try again.'),
+                    state.errorMessage ?? 'Booking failed. Please try again.'.tr()),
                 backgroundColor: Colors.red,
                 duration: Duration(seconds: 3),
               ),
@@ -2028,7 +2028,7 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Processing your booking...'),
+                Text('Processing your booking...'.tr()),
               ],
             ),
           );

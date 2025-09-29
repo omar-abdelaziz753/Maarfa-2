@@ -51,7 +51,7 @@ class IntroCubit extends Cubit<IntroState> {
     emit(ChangeIntroScrollState());
   }
 
-  GuestDataModel guestData = GuestDataModel();
+  // GuestDataModel guestData = GuestDataModel();
 
   // Future<void> guestLogin(BuildContext context) async {
   //   emit(GuestLoadingState());
@@ -127,69 +127,69 @@ class IntroCubit extends Cubit<IntroState> {
   //   }
   // }
 
-  Future<void> guestLogin(BuildContext context) async {
-    emit(GuestLoadingState());
+  // Future<void> guestLogin(BuildContext context) async {
+  //   emit(GuestLoadingState());
 
-    try {
-      // Use DioService to make the POST request
-      final response = await DioService2().post(
-        '/check-guest', // API endpoint path
-        body: {}, // Add any required body parameters if needed
-      );
+  //   try {
+  //     // Use DioService to make the POST request
+  //     final response = await DioService2().post(
+  //       '/check-guest', // API endpoint path
+  //       body: {}, // Add any required body parameters if needed
+  //     );
 
-      // Handle the response using Either from dartz
-      return response.fold(
-        (failure) {
-          // Failure case
-          debugPrint('Failure: $failure');
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(failure.toString()),
-          ));
-          emit(GuestErrorState(failure.toString()));
-        },
-        (data) {
-          // Success case
-          guestData = GuestDataModel.fromJson(data);
+  //     // Handle the response using Either from dartz
+  //     return response.fold(
+  //       (failure) {
+  //         // Failure case
+  //         debugPrint('Failure: $failure');
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //           backgroundColor: Colors.red,
+  //           content: Text(failure.toString()),
+  //         ));
+  //         emit(GuestErrorState(failure.toString()));
+  //       },
+  //       (data) {
+  //         // Success case
+  //         guestData = GuestDataModel.fromJson(data);
 
-          if (guestData.status == true && guestData.data?.guestToken != null) {
-            // Save guest token and isGuest to shared preferences
-            SharedPreferences.getInstance().then((prefs) {
-              prefs.setString('token',
-                  guestData.data!.guestToken!.replaceAll(RegExp(r'\s+'), ''));
-              prefs.setBool('isGuest', guestData.data!.isGuestMode ?? true);
-            });
+  //         if (guestData.status == true && guestData.data?.guestToken != null) {
+  //           // Save guest token and isGuest to shared preferences
+  //           SharedPreferences.getInstance().then((prefs) {
+  //             prefs.setString('token',
+  //                 guestData.data!.guestToken!.replaceAll(RegExp(r'\s+'), ''));
+  //             prefs.setBool('isGuest', guestData.data!.isGuestMode ?? true);
+  //           });
 
-            debugPrint(
-                'Guest Token: ${guestData.data!.guestToken!.replaceAll(RegExp(r'\s+'), '')}');
-            debugPrint('Is Guest Mode: ${guestData.data!.isGuestMode}');
+  //           debugPrint(
+  //               'Guest Token: ${guestData.data!.guestToken!.replaceAll(RegExp(r'\s+'), '')}');
+  //           debugPrint('Is Guest Mode: ${guestData.data!.isGuestMode}');
 
-            // Show success SnackBar
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.green,
-              content: Text(guestData.message ?? tr('login_success')),
-            ));
+  //           // Show success SnackBar
+  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.green,
+  //             content: Text(guestData.message ?? tr('login_success')),
+  //           ));
 
-            emit(GuestSuccessState());
-          } else {
-            // Show error SnackBar
-            final errorMessage = guestData.message ?? tr('guest_login_failed');
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(errorMessage),
-            ));
-            emit(GuestErrorState(errorMessage));
-          }
-        },
-      );
-    } catch (e) {
-      // Handle unexpected errors
-      final errorMessage = tr('unexpected_error', args: [e.toString()]);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(errorMessage),
-      ));
-      emit(GuestErrorState(errorMessage));
-    }
-  }
+  //           emit(GuestSuccessState());
+  //         } else {
+  //           // Show error SnackBar
+  //           final errorMessage = guestData.message ?? tr('guest_login_failed');
+  //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //             backgroundColor: Colors.red,
+  //             content: Text(errorMessage),
+  //           ));
+  //           emit(GuestErrorState(errorMessage));
+  //         }
+  //       },
+  //     );
+  //   } catch (e) {
+  //     // Handle unexpected errors
+  //     final errorMessage = tr('unexpected_error', args: [e.toString()]);
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //       backgroundColor: Colors.red,
+  //       content: Text(errorMessage),
+  //     ));
+  //     emit(GuestErrorState(errorMessage));
+  //   }
+  // }
 }

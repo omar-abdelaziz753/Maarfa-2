@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_academy/layout/activity/user_screens/request/course_request_summary.dart';
@@ -11,34 +14,86 @@ import '../../../widget/alert/alert_messege.dart';
 import '../../../widget/toast/toast.dart';
 
 class AddRequestsRepository {
+  // addRequestLesson({
+  //   required int id,
+  //   required List<int> times,
+  //   required BuildContext context,
+  // }) async {
+  //   try {
+  //     return await DioService().post('/clients/requests', body: {
+  //       'type': 'lesson',
+  //       "id": id,
+  //       "times": List.generate(times.length, (index) => times[index]),
+  //     }).then((value) {
+  //       return value.fold((l) => showToast(l.toString()), (r) {
+  //         Get.offAll(() => const MainScreen());
+  //         // if (r['data'] != null) {
+  //         //   context.read<PayCubit>().pay(
+  //         //         id: r['data']['id'],
+  //         //         context: context,
+  //         //       );
+  //         // } else {
+  //         //   showToast(r['messages']);
+  //         // }
+  //         // return addLessonRequest;
+  //       });
+  //     });
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
   addRequestLesson({
     required int id,
     required List<int> times,
     required BuildContext context,
   }) async {
-    try {
-      return await DioService().post('/clients/requests', body: {
+    final value = await DioService().post22(
+      '/clients/requests',
+      body: {
         'type': 'lesson',
         "id": id,
         "times": List.generate(times.length, (index) => times[index]),
-      }).then((value) {
-        return value.fold((l) => showToast(l.toString()), (r) {
-          Get.offAll(() => const MainScreen());
-          // if (r['data'] != null) {
-          //   context.read<PayCubit>().pay(
-          //         id: r['data']['id'],
-          //         context: context,
-          //       );
-          // } else {
-          //   showToast(r['messages']);
-          // }
-          // return addLessonRequest;
-        });
-      });
-    } catch (e) {
-      debugPrint(e.toString());
+      },
+    );
+
+    log('Helloooooooooooooo');
+    log(value.toString());
+    log('Helloooooooooooooo');
+
+    if (value == null) {
+      showToast("لم يتم استلام أي رد من السيرفر");
+      return null;
     }
+
+    return value.fold(
+          (l) {
+        // Error من Dio (network, timeout...)
+        showToast(l.toString());
+        return null;
+      },
+          (r) {
+        if (r is Map && r['success'] == false) {
+          // 🔥 هتسحب الرسالة اللي جاية من السيرفر
+          final msg = r['messages'] ?? 'حدث خطأ غير متوقع';
+          showToast(msg);
+          return null;
+        }
+
+        if (r is Map && r['success'] == true) {
+          // نجاح → نروح على MainScreen
+          Get.offAll(() => const MainScreen());
+          return r;
+        }
+
+        showToast("استجابة غير متوقعة من السيرفر");
+        return null;
+      },
+    );
   }
+
+
+
+
 
   validateRequest({
     required int id,
@@ -69,7 +124,7 @@ class AddRequestsRepository {
                     (route) => false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Booking confirmed successfully!'),
+                content: Text(tr('Booking confirmed successfully!')),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 2),
               ),

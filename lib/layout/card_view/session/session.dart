@@ -106,7 +106,7 @@ class SessionCard extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: screenWidth / 2,
-                        child: Text("دورة في اساسيات التصميم",
+                        child: Text("حصص جماعية في اساسيات التصميم",
                             style: TextStyles.appBarStyle.copyWith(
                                 color: blackColor,
                                 fontWeight: FontWeight.bold)),

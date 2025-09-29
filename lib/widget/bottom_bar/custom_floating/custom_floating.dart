@@ -141,7 +141,7 @@ ItemBuilder _defaultItemBuilder({
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 4),
-            if (isSelected)
+            if (item.showTitleAlways == true || isSelected)
               Text(
                 item.title!,
                 style: textStyle?.copyWith(
@@ -234,10 +234,12 @@ class CustomFloatingNavbarItem {
   final String? title;
   final String? icon;
   final Widget? customWidget;
+  final bool? showTitleAlways;
 
   CustomFloatingNavbarItem({
     this.icon,
     this.title,
     this.customWidget,
+    this.showTitleAlways,
   }) : assert(icon != null || customWidget != null);
 }

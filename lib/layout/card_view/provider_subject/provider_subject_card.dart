@@ -243,14 +243,14 @@ class ProviderSubjectCard extends StatelessWidget {
                     color: greyColor,
                   ),
                 ),
-                Text(
-                  e.DateFormat("d/MM/yy h:mm a", "en")
-                      .format(data.times![0].startsAt)
-                      .toString(),
-                  style: TextStyles.textView12Bold.copyWith(
-                    color: darkGrey,
-                  ),
-                ),
+                // Text(
+                //   e.DateFormat("d/MM/yy h:mm a", "en")
+                //       .format(data.times![0].startsAt)
+                //       .toString(),
+                //   style: TextStyles.textView12Bold.copyWith(
+                //     color: darkGrey,
+                //   ),
+                // ),
               ],
             ),
 

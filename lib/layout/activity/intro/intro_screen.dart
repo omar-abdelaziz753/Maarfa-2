@@ -23,7 +23,7 @@ class IntroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SharedPrefService pref = SharedPrefService();
     return BlocProvider(
-        create: (BuildContext context) => IntroCubit()..guestLogin(context),
+        create: (BuildContext context) => IntroCubit(),
         child: BlocConsumer<IntroCubit, IntroState>(
             listener: (context, state) {},
             builder: (context, state) {

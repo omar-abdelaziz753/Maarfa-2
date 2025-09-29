@@ -179,7 +179,8 @@ class _ProviderHomeViewState extends State<ProviderHomeView> {
                               itemBuilder: (context, index) => Padding(
                                 padding: EdgeInsets.only(bottom: 15.h),
                                 child: ProviderSubjectCard(
-                                    data: data.data.lessons![index]),
+                                    data: data.data.lessons?[index] ,
+                                ),
                               ),
                             ),
                       const Space(boxHeight: 50),

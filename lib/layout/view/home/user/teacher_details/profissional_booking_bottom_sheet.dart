@@ -910,7 +910,14 @@ class _ProfessionalBookingBottomSheetState
                   // print(_fromTime);
                   // print(_toTime);
                   // print(_selectedType);
-                  canConfirm ? _confirmBooking() : null;
+                  // canConfirm ? _confirmBooking() : null;
+                  if (_tabController.index == 0) {
+                    // لو المستخدم في تاب التاريخ، حوّله لتاب الوقت
+                    _tabController.animateTo(1);
+                  } else if (_tabController.index == 1 && canConfirm) {
+                    // لو المستخدم في تاب الوقت وكامل البيانات متاحة
+                    _confirmBooking();
+                  }
                 },
                 // onPressed: canConfirm ? _confirmBooking : null,
                 style: ElevatedButton.styleFrom(

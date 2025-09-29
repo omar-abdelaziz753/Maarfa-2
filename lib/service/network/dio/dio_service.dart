@@ -63,7 +63,7 @@ class DioService {
         queryParameters: queryParams,
         options: dio.Options(
           headers: {
-            "Accept-Language": Get.locale?.languageCode,
+            "lang": Get.locale?.languageCode,
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": value == '0' ? null : 'Bearer $value',
@@ -111,6 +111,86 @@ class DioService {
     }
   }
 
+  post22(
+      path, {
+        Map<String, dynamic>? body,
+        String? url,
+        Map<String, dynamic>? queryParams,
+      }) async {
+    debugPrint('new request in ${Get.locale?.languageCode} :$path');
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('token') ?? '0';
+
+    try {
+      body ?? {};
+      queryParams ?? {};
+      debugPrint(jsonEncode(body));
+      debugPrint('token $value');
+
+      final response = await _dio!.post(
+        path,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "lang": Get.locale?.languageCode,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": value == '0' ? null : 'Bearer $value',
+          },
+        ),
+        data: body,
+      );
+
+      debugPrint('response ${json.encode(response.data)}');
+      debugPrint(response.statusCode.toString());
+
+      if (response.data["status"] == 401) {
+        debugPrint('response error 401');
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      }
+
+      // ✅ هنا نرجع دايمًا قيمة، سواء نجاح أو خطأ
+      if (200 <= response.statusCode! && response.statusCode! <= 299) {
+        if (response.data['success'] == true) {
+          prefs.setInt("notification", response.data['notificationsCount']);
+          return Right(response.data);
+        } else {
+          return Left(response.data["messages"].toString());
+        }
+      } else {
+        // 🔥 ده اللي كان ناقصك: لما يكون statusCode مش 200
+        return Left(response.data["messages"]?.toString() ?? "حدث خطأ غير متوقع");
+      }
+
+    } on dio.DioException catch (e) {
+      debugPrint(e.response.toString());
+
+      if (e.response?.data["status"] == 401) {
+        debugPrint('response error 401');
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      }
+
+      if (e.type == dio.DioExceptionType.connectionTimeout ||
+          e.type == dio.DioExceptionType.receiveTimeout ||
+          e.type == dio.DioExceptionType.sendTimeout) {
+        return await post(path, body: body);
+      }
+
+      if (e.response?.data != null) {
+        return Left(e.response!.data["messages"].toString());
+      }
+
+      if (e.error is SocketException) {
+        return Left(tr("no_internet_connection"));
+      }
+
+      return Left("حدث خطأ أثناء الاتصال بالسيرفر");
+    } on HandshakeException {
+      return Left(tr("no_internet_connection_try_again"));
+    }
+  }
+
+
   get(path,
       {Map<String, dynamic>? body,
       // String? url,
@@ -131,7 +211,7 @@ class DioService {
         queryParameters: queryParams,
         options: dio.Options(
           headers: {
-            "Accept-Language": Get.locale!.languageCode,
+            "lang": Get.locale!.languageCode,
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": value == '0' ? null : 'Bearer $value',
@@ -192,7 +272,7 @@ class DioService {
         queryParameters: queryParams,
         options: dio.Options(
           headers: {
-            "Accept-Language": Get.locale!.languageCode,
+            "lang": Get.locale!.languageCode,
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": value == '0' ? null : 'Bearer $value',
@@ -253,7 +333,7 @@ class DioService {
         queryParameters: queryParams,
         options: dio.Options(
           headers: {
-            "Accept-Language": Get.locale!.languageCode,
+            "lang": Get.locale!.languageCode,
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": value == '0' ? null : 'Bearer $value',

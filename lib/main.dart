@@ -183,7 +183,7 @@ class MyApp extends StatelessWidget {
             // useInheritedMediaQuery: true,
             // builder: DevicePreview.appBuilder,
             defaultTransition: trans.Transition.circularReveal,
-            title: "Maarfa",
+            title: "Maarefa",
             theme: ThemeData(
                 fontFamily: "Shamel",
                 scaffoldBackgroundColor: scaffoldBackgroundColor,

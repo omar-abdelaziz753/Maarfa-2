@@ -62,7 +62,7 @@ class _RequstCourseDetailsCardState extends State<RequstCourseDetailsCard> {
                 ),
                 Expanded(
                   child: Text(widget.courseDetailsModel.name!,
-                      // "دورة فى فن إدارة الاعمال و التطور للمبتدئين",
+                      // "حصص جماعية فى فن إدارة الاعمال و التطور للمبتدئين",
                       style: TextStyles.appBarStyle.copyWith(
                           color: blackColor, fontWeight: FontWeight.bold)),
                 ),

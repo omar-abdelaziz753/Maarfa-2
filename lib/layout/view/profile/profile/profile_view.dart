@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:my_academy/bloc/auth/show_delete_and_payment/show_delete_and_paymnet_cubit.dart';
 import 'package:my_academy/failure.dart';
+import 'package:my_academy/layout/activity/static/contact_us/contact_us_screen.dart';
 import 'package:my_academy/layout/view/profile/managers/contact_support_service_cubit.dart';
 import 'package:my_academy/layout/view/profile/profile/contact_support_service_screen.dart';
+import 'package:my_academy/layout/view/profile/profile/poll_screen.dart';
 import 'package:my_academy/service/local/share_prefs_service.dart';
 
 import '../../../../../widget/error/page/error_page.dart';
@@ -33,6 +35,7 @@ import 'profile_cache_view.dart';
 
 class ProfileView extends StatefulWidget {
   final bool isUser;
+
   const ProfileView({super.key, required this.isUser});
 
   @override
@@ -196,15 +199,15 @@ class _ProfileViewState extends State<ProfileView> {
                                   child: const ContactSupportServiceScreen(),
                                 ));
                           }),
-                      ProfileButton(
-                          title: tr("chatting"),
-                          image: contactusMore,
-                          onTap: () {}),
+                      // ProfileButton(
+                      //     title: tr("chatting"),
+                      //     image: contactusMore,
+                      //     onTap: () {}),
                       ProfileButton(
                           title: tr("contact_us"),
                           image: contactusMore,
                           onTap: () {
-                            // Get.to(() => const ContactUsScreen());
+                            Get.to(() => const ContactUsScreen());
                           }),
                       ProfileButton(
                           title: tr("about_us"),
@@ -214,88 +217,75 @@ class _ProfileViewState extends State<ProfileView> {
                           title: tr("language"),
                           image: languageMore,
                           onTap: () => bloc.changeLocale(context)),
-                      FutureBuilder<Either<Failure, bool>>(
-                        future: SharedPrefService().getBool('isGuest'),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            debugPrint('--------');
-                            debugPrint('Loading isGuest...');
-                            debugPrint('--------');
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError || !snapshot.hasData) {
-                            debugPrint('--------');
-                            debugPrint('Error or no data for isGuest');
-                            debugPrint('--------');
-                            return Container();
-                          }
-
-                          return snapshot.data!.fold(
-                            (failure) {
-                              debugPrint('--------');
-                              debugPrint('Failed to get isGuest: $failure');
-                              debugPrint('--------');
-                              return Container();
-                            },
-                            (isGuest) {
-                              debugPrint('--------');
-                              debugPrint('isGuest: $isGuest');
-                              debugPrint('--------');
-                              return isGuest
-                                  ? Container()
-                                  : context
-                                          .read<ShowDeleteAndPaymnetCubit>()
-                                          .showDeleteAccount
-                                      ? ProfileButton(
-                                          title: tr("delete_account"),
-                                          image: deleteMore,
-                                          onTap: () =>
-                                              deleteAlert(deleteTap: () {
-                                                bloc.deleteAccount();
-                                              }))
-                                      : Container();
-                            },
-                          );
-                        },
-                      ),
-                      FutureBuilder<Either<Failure, bool>>(
-                        future: SharedPrefService().getBool('isGuest'),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            debugPrint('--------');
-                            debugPrint('Loading isGuest...');
-                            debugPrint('--------');
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError || !snapshot.hasData) {
-                            debugPrint('--------');
-                            debugPrint('Error or no data for isGuest');
-                            debugPrint('--------');
-                            return Container();
-                          }
-
-                          return snapshot.data!.fold(
-                            (failure) {
-                              debugPrint('--------');
-                              debugPrint('Failed to get isGuest: $failure');
-                              debugPrint('--------');
-                              return Container();
-                            },
-                            (isGuest) {
-                              debugPrint('--------');
-                              debugPrint('isGuest: $isGuest');
-                              debugPrint('--------');
-                              return isGuest
-                                  ? Container()
-                                  : ProfileButton(
-                                      title: tr("logout"),
-                                      image: logoutMore,
-                                      isLogout: true,
-                                      onTap: () => bloc.logout());
-                            },
-                          );
-                        },
-                      ),
+                      ProfileButton(
+                          title: tr("polls"),
+                          image: languageMore,
+                          onTap: () => Get.to(BlocProvider(
+                                create: (context) =>
+                                    ContactSupportServiceCubit(),
+                                child: PollScreen(),
+                              ))),
+                      context
+                              .read<ShowDeleteAndPaymnetCubit>()
+                              .showDeleteAccount
+                          ? ProfileButton(
+                              title: tr("delete_account"),
+                              image: deleteMore,
+                              onTap: () => deleteAlert(deleteTap: () {
+                                    bloc.deleteAccount();
+                                  }))
+                          : Container(),
+                      // FutureBuilder<Either<Failure, bool>>(
+                      //   future: SharedPrefService().getBool('isGuest'),
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       debugPrint('--------');
+                      //       debugPrint('Loading isGuest...');
+                      //       debugPrint('--------');
+                      //       return CircularProgressIndicator();
+                      //     } else if (snapshot.hasError || !snapshot.hasData) {
+                      //       debugPrint('--------');
+                      //       debugPrint('Error or no data for isGuest');
+                      //       debugPrint('--------');
+                      //       return Container();
+                      //     }
+                      //
+                      //     return snapshot.data!.fold(
+                      //       (failure) {
+                      //         debugPrint('--------');
+                      //         debugPrint('Failed to get isGuest: $failure');
+                      //         debugPrint('--------');
+                      //         return ProfileButton(
+                      //             title: tr("logout"),
+                      //             image: logoutMore,
+                      //             isLogout: true,
+                      //             onTap: () => bloc.logout());
+                      //       },
+                      //       (isGuest) {
+                      //         debugPrint('--------');
+                      //         debugPrint('isGuest: $isGuest');
+                      //         debugPrint('--------');
+                      //         return isGuest
+                      //             ? ProfileButton(
+                      //                 title: tr("logout"),
+                      //                 image: logoutMore,
+                      //                 isLogout: true,
+                      //                 onTap: () => bloc.logout())
+                      //             : ProfileButton(
+                      //                 title: tr("logout"),
+                      //                 image: logoutMore,
+                      //                 isLogout: true,
+                      //                 onTap: () => bloc.logout());
+                      //       },
+                      //     );
+                      //   },
+                      // ),
+                      ProfileButton(
+                          title: tr("logout"),
+                          image: logoutMore,
+                          isLogout: true,
+                          onTap: () => bloc.logout()),
                       const SizedBox(
                         height: 70,
                       ),

@@ -165,6 +165,22 @@ class NotificationsCard extends StatelessWidget {
                       Space(boxHeight: 4.h),
                       // Notification message
                       Text(
+                        data.title ?? "",
+                        style: TextStyles.contentStyle.copyWith(
+                          color: txtColor.withValues(alpha: 0.8),
+                          height: 1.4,
+                        ),
+                      ),
+                      Space(boxHeight: 4.h),
+
+                      Divider(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        thickness: 1,
+                      ),
+                      Space(boxHeight: 4.h),
+
+                      // Notification message
+                      Text(
                         data.text ?? "",
                         style: TextStyles.contentStyle.copyWith(
                           color: txtColor.withValues(alpha: 0.8),
@@ -203,10 +219,10 @@ class NotificationsCard extends StatelessWidget {
             Space(boxHeight: 16.h),
 
             // Divider
-            Divider(
-              color: Colors.grey.withValues(alpha: 0.1),
-              thickness: 1,
-            ),
+            // Divider(
+            //   color: Colors.grey.withValues(alpha: 0.1),
+            //   thickness: 1,
+            // ),
 
             // Space(boxHeight: 16.h),
 
