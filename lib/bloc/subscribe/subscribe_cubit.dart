@@ -49,6 +49,7 @@ class SubscribeCubit extends Cubit<SubscribeState> {
   clearFilter(type) {
     status = "";
     if (type == 'lesson') {
+      changeFilter('');
       getSubscriptionLesson();
     } else {
       getSubscriptionCourse();
@@ -136,6 +137,9 @@ class SubscribeCubit extends Cubit<SubscribeState> {
   // }
 
   getFilteredCoursesHandler() {
+    print('==========================');
+    print(status);
+    print('==========================');
     if (status == "") {
       showToast('choose filter first');
     } else if (status == 'comming') {
@@ -148,6 +152,9 @@ class SubscribeCubit extends Cubit<SubscribeState> {
   }
 
   getFilteredLessonsHandler() {
+    print('==========================');
+    print(status);
+    print('==========================');
     if (status == "") {
       showToast('choose filter first');
     } else if (status == 'comming') {

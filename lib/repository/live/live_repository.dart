@@ -11,7 +11,7 @@ class LiveRepository {
       Map<String, dynamic> data) async {
     try {
       final response =
-          await DioService().post('/agora/generate_token', body: data);
+          await DioService().post3('/agora/generate_token', body: data);
       late final Either<Failure, String> result;
       response.fold((l) {
         result = Left(Failure(l));

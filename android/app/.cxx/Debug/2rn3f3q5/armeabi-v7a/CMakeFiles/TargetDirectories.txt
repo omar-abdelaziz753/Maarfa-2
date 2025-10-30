@@ -1,0 +1,2 @@
+D:/maarefa-app/android/app/.cxx/Debug/2rn3f3q5/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/maarefa-app/android/app/.cxx/Debug/2rn3f3q5/armeabi-v7a/CMakeFiles/rebuild_cache.dir

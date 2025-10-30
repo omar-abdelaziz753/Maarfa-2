@@ -104,7 +104,7 @@ class AddRequestsRepository {
     bool? isHome = false
   }) async {
     try {
-      return await DioService().post('/clients/requests/validate', body: {
+      return await DioService().post23('/clients/requests/validate', body: {
         'type': type,
         "id": id,
         "times": List.generate(times.length, (index) => times[index]),
@@ -124,7 +124,7 @@ class AddRequestsRepository {
                     (route) => false);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(tr('Booking confirmed successfully!')),
+                content: Text(tr('Bookingconfirmedsuccessfully')),
                 backgroundColor: Colors.green,
                 duration: Duration(seconds: 2),
               ),

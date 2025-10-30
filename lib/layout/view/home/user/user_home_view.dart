@@ -306,7 +306,7 @@ class _UserHomeViewState extends State<UserHomeView> {
                         );
                       },
                     ),
-                  )
+                  ),
 
                   // SizedBox(
                   //   width: screenWidth,

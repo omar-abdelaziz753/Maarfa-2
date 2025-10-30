@@ -398,10 +398,10 @@ class _TeacherDetailsScreenState extends State<TeacherDetailsScreen>
           //       teacher.provider?.phone ?? 'no_phone_number'.tr()),
           //   SizedBox(height: 12.h),
           // ],
-          if (teacher.provider?.email != null) ...[
-            _buildInfoRow(Icons.email_outlined, 'emailAddress'.tr(),
-                teacher.provider?.email ?? 'no_email'.tr()),
-          ],
+          // if (teacher.provider?.email != null) ...[
+          //   _buildInfoRow(Icons.email_outlined, 'emailAddress'.tr(),
+          //       teacher.provider?.email ?? 'no_email'.tr()),
+          // ],
         ],
       ),
     );

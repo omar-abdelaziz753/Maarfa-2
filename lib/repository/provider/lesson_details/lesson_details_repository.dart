@@ -22,7 +22,7 @@ class LessonDetailsProviderRepository {
   deleteLesson(int id) async {
     try {
       return await DioService()
-          .delete("/providers/lessons/$id/delete")
+          .delete22("/providers/lessons/$id/delete")
           .then((value) => value.fold((l) => showToast(l), (r) {
                 showToast(r["message"]);
               }));

@@ -292,6 +292,10 @@ class CourseFilterView extends StatelessWidget {
                           //     yearId, id, title);
                           bloc.minPrice.clear();
                           bloc.maxPrice.clear();
+                          bloc.changeSelectedStatus(0);
+                          bloc.getFiltersMap('type', 1);
+                          bloc.getFiltersMap('status', 1);
+                          bloc.getFiltersMap('price', 1);
                         },
                         buttonText: tr("clear_filter"),
                         buttonStyle:

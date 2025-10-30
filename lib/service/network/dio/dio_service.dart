@@ -187,6 +187,77 @@ class DioService {
     }
   }
 
+  post3(
+      String path, {
+        Map<String, dynamic>? body,
+        Map<String, dynamic>? queryParams,
+      }) async {
+    debugPrint('POST3 => ${Get.locale?.languageCode} : $path');
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token") ?? "0";
+    final headers = {
+      "lang": Get.locale?.languageCode,
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "Authorization": token == "0" ? null : "Bearer $token",
+    };
+
+    try {
+      final response = await _dio!.post(
+        path,
+        queryParameters: queryParams,
+        data: body,
+        options: dio.Options(headers: headers),
+      );
+
+      debugPrint("📌 Response: ${json.encode(response.data)}");
+
+      final msg = response.data["messages"]?.toString() ?? "Unknown error";
+      final success = response.data["success"] == true;
+      final status = response.data["status"] ?? 0;
+
+      if (status == 401) {
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+        return Left("Unauthorized");
+      }
+
+      if (success) {
+        prefs.setInt("notification", response.data['notificationsCount']);
+        return Right(response.data);
+      }
+
+      /// ❗ Always show the message from backend on errors
+      return Left(msg);
+
+    } on dio.DioException catch (e) {
+      debugPrint("❌ DioException: $e");
+
+      final msg = e.response?.data["messages"]?.toString();
+
+      if (e.response?.data["status"] == 401) {
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+        return Left("Unauthorized");
+      }
+
+      if (msg != null) {
+        return Left(msg); // ✅ Important for backend message
+      }
+
+      if (e.type == dio.DioExceptionType.connectionTimeout ||
+          e.type == dio.DioExceptionType.receiveTimeout ||
+          e.type == dio.DioExceptionType.sendTimeout) {
+        return Left("اتصال الانترنت ضعيف حاول مرة تانية");
+      }
+
+      return Left("Error: ${e.message}");
+    } catch (e) {
+      debugPrint("🔥 Unexpected: $e");
+      return Left("Unexpected error: $e");
+    }
+  }
+
+
 
   post22(
       path, {
@@ -548,6 +619,9 @@ class DioService {
     }
   }
 
+
+
+
   requestWithFile(File? file, Map<String, dynamic>? data, path, key) async {
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString("token") ?? "0";
@@ -599,6 +673,81 @@ class DioService {
       }
     }
   }
+
+  delete22(path,
+      {Map<String, dynamic>? body,
+        String? url,
+        Map<String, dynamic>? queryParams}) async {
+    debugPrint('new request :$path');
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString("token") ?? "0";
+    try {
+      body ??= {};
+      queryParams ??= {};
+
+      debugPrint(jsonEncode(body));
+
+      final response = await _dio!.delete(
+        path,
+        queryParameters: queryParams,
+        options: dio.Options(
+          headers: {
+            "lang": Get.locale!.languageCode,
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": value == '0' ? null : 'Bearer $value',
+          },
+        ),
+        data: body,
+      );
+
+      debugPrint(response.toString());
+
+      if (response.data["status"] == 401) {
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      }
+
+      debugPrint("response: $response");
+
+      if (200 <= response.statusCode! && response.statusCode! <= 299) {
+        if (response.data['status'] == true ||
+            !response.data.toString().contains("status")) {
+          return Right(response.data);
+        } else {
+          /// ✅ هنا هترجع messages زي ما انت عايز
+          return Left(response.data['messages'].toString());
+        }
+      } else {
+        /// ✅ في حالة statusCode مش ناجح
+        return Left(response.data['messages'].toString());
+      }
+    } on dio.DioException catch (e) {
+      debugPrint(e.response.toString());
+
+      if (e.response != null &&
+          e.response!.data != null &&
+          e.response!.data["status"] == 401) {
+        BlocProvider.of<AuthProviderCubit>(Get.context!).signout();
+      } else if (e.type == dio.DioExceptionType.connectionTimeout ||
+          e.type == dio.DioExceptionType.receiveTimeout ||
+          e.type == dio.DioExceptionType.sendTimeout) {
+        return await post(path, body: body);
+      } else if (e.response != null &&
+          e.response!.data != null &&
+          e.response!.data["messages"] != null) {
+        /// ✅ ترجيع رسالة الخطأ من السيرفر
+        return Left(e.response!.data["messages"].toString());
+      } else if (e.error.runtimeType != SocketException) {
+        return Left('حدث خطأ غير متوقع');
+      } else {
+        return Left(tr("no_internet_connection"));
+      }
+    } on HandshakeException catch (e) {
+      debugPrint(e.toString());
+      return Left(tr("no_internet_connection_try_again"));
+    }
+  }
+
 
   requestWithFile22(File? file, Map<String, dynamic>? data, path, key) async {
     final prefs = await SharedPreferences.getInstance();
