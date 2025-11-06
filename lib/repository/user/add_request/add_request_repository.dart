@@ -147,7 +147,7 @@ class AddRequestsRepository {
       required CourseDetailsModel courseDetailsModel,
       required GroupModel groupModel}) async {
     try {
-      return await DioService().post('/clients/requests/validate', body: {
+      return await DioService().post22('/clients/requests/validate', body: {
         'type': "course",
         "id": id,
         "group_id": groupId,
