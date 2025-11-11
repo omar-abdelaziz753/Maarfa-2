@@ -22,6 +22,7 @@ import 'package:my_academy/bloc/lessons/lessons_cubit.dart';
 import 'package:my_academy/bloc/pay/pay_cubit.dart';
 import 'package:my_academy/bloc/search_bloc/search_bloc.dart';
 import 'package:my_academy/constants.dart';
+import 'package:my_academy/layout/activity/auth/forget/new_password.dart';
 import 'package:my_academy/layout/activity/splash/splash_screen.dart';
 import 'package:my_academy/layout/view/home/user/data/cubit/home_cubit.dart';
 import 'package:my_academy/repository/common/cities/cities_repository.dart';
@@ -189,7 +190,8 @@ class MyApp extends StatelessWidget {
                 scaffoldBackgroundColor: scaffoldBackgroundColor,
                 appBarTheme: AppBarTheme(
                   surfaceTintColor: Colors.white,
-                )),
+                ),
+            ),
             debugShowCheckedModeBanner: false,
             debugShowMaterialGrid: false,
             fallbackLocale: context.fallbackLocale,
@@ -200,6 +202,11 @@ class MyApp extends StatelessWidget {
               ScreenUtil.init(context, designSize: const Size(428, 926));
               return const SplashScreen();
             }),
+            // home: Builder(builder: (context) {
+            //   ScreenUtil.init(context, designSize: const Size(428, 926));
+            //   return NewPasswordScreen(email: 'adsgsag', code: '134352');
+            // }),
+            // home: NewPasswordScreen(email: 'adsgsag', code: '134352'),
           ),
         ),
       );

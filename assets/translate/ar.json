@@ -424,7 +424,7 @@
   "skills_acquired": "المهارات المكتسبة",
   "error_message": "هذا الحقل ضروري",
   "error_password": "هذا الحقل ضروري بحيث لا يقل عن ٨ أحرف",
-  "offline": "حضوري",
+  "offline": "عن بعد",
   "single": " فردى ",
   "month": " شهر ",
   "group_number": "مجموعة رقم {}",

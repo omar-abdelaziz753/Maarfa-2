@@ -154,6 +154,9 @@ class SubscribeCourseView extends StatelessWidget {
               count: data.subscriptions.length,
               child: (context, index) => Column(
                     children: [
+                      const Space(
+                        boxHeight: 5,
+                      ),
                       GestureDetector(
                         onTap: () {
                           Get.to(() => RequsetAndDownload(

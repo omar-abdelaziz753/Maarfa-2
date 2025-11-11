@@ -21,7 +21,7 @@ class CourseSubjectHeader extends StatelessWidget {
       shadowColor: borderColor.withValues(alpha: 0.15),
       child: Container(
         width: screenWidth,
-        height: 100.h,
+        height: 90.h,
         color: white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

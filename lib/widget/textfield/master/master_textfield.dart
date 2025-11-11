@@ -233,6 +233,7 @@ class MasterTextField extends StatelessWidget {
                 padding: EdgeInsets.only(
                   left: sidePadding ?? 0,
                   right: sidePadding ?? 0,
+                  top: 14.h
                 ),
                 child: Text(
                   errorText!,

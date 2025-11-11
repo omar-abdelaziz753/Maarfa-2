@@ -38,14 +38,15 @@ class ProviderRequestsScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      const Space(
+                        boxHeight: 45,
+                      ),
                       CourseSubjectHeader(
                         courseTap: () => bloc.chooseCourseSubject(false),
                         subjectTap: () => bloc.chooseCourseSubject(true),
                         isSubject: bloc.isSubject,
                       ),
-                      const Space(
-                        boxHeight: 35,
-                      ),
+
                       bloc.isSubject
                           ? const SidePadding(
                               sidePadding: 15,

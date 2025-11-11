@@ -424,7 +424,7 @@
   "add_appointments": "Add Appointments",
   "start_date": "Start Date",
   "error_password": "This Field is Required with at least 8 characters",
-  "offline": "Offline",
+  "offline": "Remote",
   "change": "Change",
   "change_email": "Change Email Address",
   "live": "Live",
