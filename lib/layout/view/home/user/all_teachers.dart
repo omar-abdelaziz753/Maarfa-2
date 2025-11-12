@@ -21,6 +21,7 @@ class BestTeachersCard extends StatelessWidget {
         itemBuilder: (context, index) {
           final teacher = teachers[index];
           return _TeacherCard(teacher: teacher);
+
         },
       ),
     );

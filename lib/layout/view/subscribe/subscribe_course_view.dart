@@ -153,6 +153,7 @@ class SubscribeCourseView extends StatelessWidget {
               axis: Axis.vertical,
               count: data.subscriptions.length,
               child: (context, index) => Column(
+
                     children: [
                       const Space(
                         boxHeight: 5,
